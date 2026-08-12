@@ -5,517 +5,532 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JOLT Foundation — Staff Communication Dashboard</title>
 <style>
-:root {
-  --red: #BF1E2D;
-  --dark-red: #8B0000;
-  --dark-gray: #2D2D2D;
-  --med-gray: #888780;
-  --light-gray: #F5F5F5;
-  --light-pink: #FBE9EA;
-  --white: #ffffff;
-  --border: #e0e0e0;
-  --text: #2D2D2D;
-  --text-muted: #888780;
-  --radius: 8px;
-  --font: Arial, Helvetica, sans-serif;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font); background: var(--light-gray); color: var(--text); min-height: 100vh; }
-.app { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem; }
-.screen { display: none; }
-.screen.active { display: block; }
-.logo-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
-.logo-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--red); }
-.logo-text { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: .02em; }
-.logo-sub { font-size: 12px; color: var(--text-muted); margin-left: auto; }
-h2 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 1rem; }
-h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: .5rem; }
-p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
-.card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
-.card-accent { border-left: 4px solid var(--red); border-radius: 0 12px 12px 0; }
-label { font-size: 13px; font-weight: 600; color: var(--text); display: block; margin-bottom: 6px; margin-top: 14px; }
-input, select, textarea { width: 100%; font-size: 14px; padding: 9px 11px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); color: var(--text); font-family: var(--font); }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red); }
-textarea { min-height: 80px; resize: vertical; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 20px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); color: var(--text); font-size: 14px; font-family: var(--font); cursor: pointer; transition: all .15s; font-weight: 500; }
-.btn:hover { background: var(--light-gray); }
-.btn-primary { background: var(--red); border-color: var(--red); color: var(--white); }
-.btn-primary:hover { background: var(--dark-red); border-color: var(--dark-red); }
-.btn-sm { padding: 6px 14px; font-size: 13px; }
-.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.25rem; }
-.progress-bar { height: 5px; background: var(--light-gray); border-radius: 3px; margin-bottom: 1.5rem; border: 1px solid var(--border); }
-.progress-fill { height: 100%; background: var(--red); border-radius: 3px; transition: width .3s; }
-.step-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-.option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-.option-btn { padding: 11px 13px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--light-gray); cursor: pointer; font-size: 13px; color: var(--text); text-align: left; transition: all .15s; line-height: 1.4; font-family: var(--font); }
-.option-btn:hover { border-color: var(--red); background: var(--light-pink); color: var(--dark-red); }
-.option-btn.selected { border-color: var(--red); background: var(--light-pink); color: var(--dark-red); font-weight: 600; }
-.enn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
-.enn-btn { padding: 10px 6px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--light-gray); cursor: pointer; font-size: 12px; color: var(--text); text-align: center; transition: all .15s; line-height: 1.3; font-family: var(--font); }
-.enn-btn:hover, .enn-btn.selected { border-color: var(--red); background: var(--light-pink); color: var(--dark-red); }
-.enn-num { font-size: 18px; font-weight: 700; display: block; }
-.divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
-.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.badge-red { background: var(--light-pink); color: var(--dark-red); }
-.badge-blue { background: #e8f0fe; color: #1a56db; }
-.badge-gray { background: var(--light-gray); color: var(--text-muted); border: 1px solid var(--border); }
-.badge-green { background: #ecfdf5; color: #065f46; }
-.badge-amber { background: #fffbeb; color: #92400e; }
-.result-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 8px; }
-.ai-response { font-size: 14px; color: var(--text); line-height: 1.75; white-space: pre-wrap; }
-.loading-dots { display: inline-flex; gap: 5px; }
-.loading-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: db 1.2s infinite; }
-.loading-dots span:nth-child(2) { animation-delay: .2s; }
-.loading-dots span:nth-child(3) { animation-delay: .4s; }
-@keyframes db { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-7px)} }
-.staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; margin-bottom: 1rem; }
-.staff-card { padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--white); cursor: pointer; transition: all .15s; position: relative; }
-.staff-card:hover { border-color: var(--red); box-shadow: 0 2px 8px rgba(191,30,45,.1); }
-.staff-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-.staff-name { font-size: 13px; font-weight: 600; color: var(--text); }
-.staff-role { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.due-flag { position: absolute; top: 9px; right: 9px; width: 9px; height: 9px; border-radius: 50%; background: #f59e0b; }
-.compare-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
-.compare-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
-.tab-row { display: flex; gap: 0; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); overflow-x: auto; }
-.tab { padding: 9px 14px; font-size: 13px; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; font-family: var(--font); background: none; border-top: none; border-left: none; border-right: none; font-weight: 500; }
-.tab.active { color: var(--red); border-bottom-color: var(--red); font-weight: 700; }
-.metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
-.metric { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: .85rem 1rem; }
-.metric-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-.metric-val { font-size: 22px; font-weight: 700; color: var(--text); }
-.alert { padding: 11px 15px; border-radius: var(--radius); font-size: 13px; margin-bottom: 1rem; }
-.alert-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
-.alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-.alert-warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-.pw-wrap { max-width: 340px; margin: 2.5rem auto; text-align: center; }
-.profile-row { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding: 9px 0; }
-.note-entry { background: var(--light-gray); border-radius: var(--radius); padding: .85rem; margin-bottom: 8px; }
-.note-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
-.note-text { font-size: 13px; color: var(--text); line-height: 1.5; }
-.home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-.mono { font-family: 'Courier New', monospace; font-size: 12px; background: var(--light-gray); padding: 1rem; border-radius: var(--radius); line-height: 2; color: var(--text-muted); }
+:root{--red:#BF1E2D;--dark-red:#8B0000;--text:#2D2D2D;--muted:#888780;--border:#e0e0e0;--surface:#F5F5F5;--pink:#FBE9EA;--white:#fff;--radius:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--surface);color:var(--text);min-height:100vh}
+.app{max-width:700px;margin:0 auto;padding:1.5rem 1rem}
+.screen{display:none}.screen.active{display:block}
+.logo-bar{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.logo-mark{display:flex;align-items:center;gap:8px}
+.logo-dot{width:16px;height:16px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px var(--pink)}
+.logo-text{font-size:17px;font-weight:700;color:var(--text);letter-spacing:.03em}
+.logo-sub{font-size:12px;color:var(--muted);margin-left:auto;text-align:right}
+h2{font-size:20px;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:10px}
+h3{font-size:14px;font-weight:600;margin-bottom:.5rem}
+p{font-size:14px;color:var(--muted);line-height:1.6}
+.icon{width:20px;height:20px;flex-shrink:0}
+.icon-circle{width:38px;height:38px;border-radius:50%;background:var(--pink);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.icon-circle .icon{width:19px;height:19px;color:var(--dark-red)}
+.icon-sm{width:15px;height:15px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.card-accent{border-left:4px solid var(--red);border-radius:0 12px 12px 0}
+label{font-size:13px;font-weight:600;display:block;margin-bottom:6px;margin-top:14px}
+input,select,textarea{width:100%;font-size:14px;padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text);font-family:Arial,sans-serif}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red)}
+textarea{min-height:75px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--white);color:var(--text);font-size:14px;font-family:Arial,sans-serif;cursor:pointer;font-weight:500;transition:all .15s}
+.btn:hover{background:var(--surface)}
+.btn .icon{width:17px;height:17px}
+.btn-primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn-primary:hover{background:var(--dark-red)}
+.btn-sm{padding:6px 14px;font-size:13px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1.25rem}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.home-tile{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:1.1rem;border:1px solid var(--border);border-radius:12px;background:var(--white);cursor:pointer;font-family:Arial,sans-serif;text-align:left;transition:all .15s}
+.home-tile:hover{border-color:var(--red);box-shadow:0 3px 10px rgba(191,30,45,.1)}
+.home-tile .tile-title{font-size:14px;font-weight:600;color:var(--text)}
+.home-tile .tile-sub{font-size:12px;color:var(--muted);line-height:1.4}
+.home-tile.primary{background:var(--red);border-color:var(--red)}
+.home-tile.primary .tile-title{color:#fff}
+.home-tile.primary .tile-sub{color:var(--pink)}
+.home-tile.primary .icon-circle{background:rgba(255,255,255,.18)}
+.home-tile.primary .icon-circle .icon{color:#fff}
+.progress-bar{height:5px;background:var(--border);border-radius:3px;margin-bottom:1.5rem}
+.progress-fill{height:100%;background:var(--red);border-radius:3px;transition:width .3s}
+.step-label{font-size:12px;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.ob{padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;font-size:13px;color:var(--text);text-align:left;line-height:1.4;font-family:Arial,sans-serif;transition:all .12s}
+.ob:hover{border-color:var(--red);background:var(--pink);color:var(--dark-red)}
+.ob.sel{border-color:var(--red);background:var(--pink);color:var(--dark-red);font-weight:600}
+.eg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.eb{padding:10px 6px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;font-size:12px;color:var(--text);text-align:center;line-height:1.3;font-family:Arial,sans-serif;transition:all .12s}
+.eb:hover,.eb.sel{border-color:var(--red);background:var(--pink);color:var(--dark-red)}
+.en{font-size:18px;font-weight:700;display:block}
+.div{height:1px;background:var(--border);margin:1.25rem 0}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:600}
+.badge .icon-sm{width:13px;height:13px}
+.br{background:var(--pink);color:var(--dark-red)}
+.bb{background:#e8f0fe;color:#1a56db}
+.bg{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+.bgn{background:#ecfdf5;color:#065f46}
+.bam{background:#fffbeb;color:#92400e}
+.rl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.rl .icon-sm{color:var(--red)}
+.at{font-size:14px;color:var(--text);line-height:1.75;white-space:pre-wrap}
+.loading-wrap{text-align:center;padding:4rem 1rem}
+.loading-dots{display:inline-flex;gap:5px;margin-bottom:1.25rem}
+.loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--red);animation:db 1.2s infinite}
+.loading-dots span:nth-child(2){animation-delay:.2s}
+.loading-dots span:nth-child(3){animation-delay:.4s}
+@keyframes db{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-bottom:1rem}
+.sc{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--white);cursor:pointer;position:relative;transition:all .15s}
+.sc:hover{border-color:var(--red);box-shadow:0 2px 8px rgba(191,30,45,.1)}
+.av{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;margin-bottom:8px}
+.sn{font-size:13px;font-weight:600}
+.sr{font-size:11px;color:var(--muted);margin-top:2px}
+.due-flag{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:#f59e0b}
+.cp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+.cc{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1rem}
+.tr{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.25rem;overflow-x:auto}
+.tab{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;font-size:13px;cursor:pointer;color:var(--muted);border:none;border-bottom:2px solid transparent;background:none;font-family:Arial,sans-serif;font-weight:500;white-space:nowrap;margin-bottom:-1px}
+.tab .icon-sm{width:14px;height:14px}
+.tab.active{color:var(--red);border-bottom-color:var(--red);font-weight:700}
+.mr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.mc{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem;display:flex;align-items:center;gap:12px}
+.ml{font-size:12px;color:var(--muted);margin-bottom:2px}
+.mv{font-size:21px;font-weight:700;line-height:1}
+.alert{display:flex;align-items:flex-start;gap:9px;padding:11px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:1rem;line-height:1.5}
+.alert .icon-sm{margin-top:1px;flex-shrink:0}
+.ai{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe}
+.as{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+.aw{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.pw{max-width:340px;margin:2.5rem auto;text-align:center}
+.ne{background:var(--surface);border-radius:var(--radius);padding:.85rem;margin-bottom:8px}
+.nm{font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600}
+.nt{font-size:13px;line-height:1.5}
+.pr{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);padding:9px 0}
+.footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.footer p{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
+<!-- SVG icon sprite -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h6"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.6 12 20l-7.5-7.4A5 5 0 1 1 12 6.3a5 5 0 1 1 7.5 6.3z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-.8a6.5 6.5 0 0 1 13 0v.8"/><circle cx="17.5" cy="9" r="2.8"/><path d="M16 15.2a5.4 5.4 0 0 1 5.5 5.3v.5"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.5 1h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6L22 7"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"/><path d="M21 3v5h-5"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="i-compare" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect x="3" y="7" width="6" height="10" rx="1"/><rect x="15" y="7" width="6" height="10" rx="1"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></symbol>
+</svg>
+
 <div class="app">
 <div class="logo-bar">
-  <div class="logo-dot"></div>
-  <span class="logo-text">JOLT Foundation</span>
-  <span class="logo-sub">Staff Communication Dashboard</span>
+  <div class="logo-mark">
+    <div class="logo-dot"></div>
+    <span class="logo-text">JOLT FOUNDATION</span>
+  </div>
+  <span class="logo-sub">Staff Communication<br>Dashboard</span>
 </div>
 
 <!-- HOME -->
-<div class="screen active" id="screen-home">
+<div class="screen active" id="s-home">
   <div class="card card-accent" style="margin-bottom:1.5rem">
-    <h2 style="margin-bottom:.4rem">Welcome</h2>
+    <h2 style="margin-bottom:.4rem"><svg class="icon" style="color:var(--red)"><use href="#i-heart"/></svg>Welcome</h2>
     <p>This tool helps JOLT staff understand how they give and receive communication, how they learn best, and how to work well together. There are no wrong answers — this is about knowing yourself and your team.</p>
   </div>
   <div class="home-grid">
-    <button class="btn btn-primary" style="justify-content:center" onclick="showScreen('screen-name')">&#9998; Take the assessment</button>
-    <button class="btn" style="justify-content:center" onclick="showScreen('screen-my-profile-lookup')">&#9786; View my profile</button>
+    <button class="home-tile primary" onclick="go('s-name')">
+      <span class="icon-circle"><svg class="icon"><use href="#i-clipboard"/></svg></span>
+      <span class="tile-title">Take the assessment</span>
+      <span class="tile-sub">6 short steps · about 10 minutes</span>
+    </button>
+    <button class="home-tile" onclick="go('s-lookup')">
+      <span class="icon-circle"><svg class="icon"><use href="#i-user"/></svg></span>
+      <span class="tile-title">View my profile</span>
+      <span class="tile-sub">Pull up your saved results</span>
+    </button>
   </div>
   <div class="home-grid">
-    <button class="btn" style="justify-content:center" onclick="showScreen('screen-convo-prep')">&#128172; Prepare for a conversation</button>
-    <button class="btn" style="justify-content:center;font-size:13px;color:var(--text-muted)" onclick="showScreen('screen-admin-pw')">&#128274; Admin access</button>
+    <button class="home-tile" onclick="go('s-prep')">
+      <span class="icon-circle"><svg class="icon"><use href="#i-chat"/></svg></span>
+      <span class="tile-title">Prepare for a conversation</span>
+      <span class="tile-sub">Get a strategy for a hard talk</span>
+    </button>
+    <button class="home-tile" onclick="go('s-pw')">
+      <span class="icon-circle"><svg class="icon"><use href="#i-lock"/></svg></span>
+      <span class="tile-title">Admin access</span>
+      <span class="tile-sub">Leadership only</span>
+    </button>
   </div>
+  <div class="footer"><p>JOLT Foundation · 2203 N. Sheridan Rd., Peoria, IL 61604 · joltfoundation.org</p></div>
 </div>
 
 <!-- STEP 1 -->
-<div class="screen" id="screen-name">
-  <div class="step-label">Step 1 of 6 — Getting started</div>
+<div class="screen" id="s-name">
+  <div class="step-label"><svg class="icon-sm" style="color:var(--red)"><use href="#i-user"/></svg>Step 1 of 6 — Getting started</div>
   <div class="progress-bar"><div class="progress-fill" style="width:16%"></div></div>
   <h2>Let's start with you</h2>
   <div class="card">
-    <label for="staff-name">Your full name</label>
-    <input type="text" id="staff-name" placeholder="First and last name">
-    <label for="staff-preferred">Preferred name (if different)</label>
-    <input type="text" id="staff-preferred" placeholder="What you'd like to be called">
-    <label for="staff-pronouns">Your pronouns</label>
-    <select id="staff-pronouns">
-      <option value="">Prefer not to say / not listed</option>
-      <option>she/her</option><option>he/him</option><option>they/them</option>
-      <option>she/they</option><option>he/they</option><option>ze/zir</option><option>xe/xem</option>
-    </select>
-    <label for="staff-pronouns-custom">Or write in your pronouns</label>
-    <input type="text" id="staff-pronouns-custom" placeholder="e.g. any pronouns, she/he/they...">
-    <label for="staff-role-input">Your role at JOLT</label>
-    <input type="text" id="staff-role-input" placeholder="e.g. Outreach Coordinator, Peer Support Specialist">
-    <label for="staff-email">Your email</label>
-    <input type="email" id="staff-email" placeholder="you@joltfoundation.org">
+    <label for="f-name">Your full name</label><input type="text" id="f-name" placeholder="First and last name">
+    <label for="f-pref">Preferred name (if different)</label><input type="text" id="f-pref" placeholder="What you'd like to be called">
+    <label for="f-pron">Your pronouns</label>
+    <select id="f-pron"><option value="">Prefer not to say / not listed</option><option>she/her</option><option>he/him</option><option>they/them</option><option>she/they</option><option>he/they</option><option>ze/zir</option><option>xe/xem</option></select>
+    <label for="f-pronc">Or write in your pronouns</label><input type="text" id="f-pronc" placeholder="e.g. any pronouns, she/he/they...">
+    <label for="f-role">Your role at JOLT</label><input type="text" id="f-role" placeholder="e.g. Peer Recovery Navigator, Outreach Team Lead">
+    <label for="f-email">Your email</label><input type="email" id="f-email" placeholder="you@joltfoundation.org">
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-home')">Back</button>
-    <button class="btn btn-primary" onclick="goStep2()">Continue &rarr;</button>
+    <button class="btn" onclick="go('s-home')">Back</button>
+    <button class="btn btn-primary" onclick="goStep2()">Continue <svg class="icon"><use href="#i-arrow"/></svg></button>
   </div>
 </div>
 
 <!-- STEP 2 -->
-<div class="screen" id="screen-enneagram">
-  <div class="step-label">Step 2 of 6 — Enneagram</div>
+<div class="screen" id="s-enn">
+  <div class="step-label"><svg class="icon-sm" style="color:var(--red)"><use href="#i-grid"/></svg>Step 2 of 6 — Enneagram</div>
   <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
   <h2>Your Enneagram type</h2>
   <div class="card">
     <p style="margin-bottom:1rem">Select your number. If you're not certain, pick what resonates most. This can always be updated as your self-understanding deepens.</p>
-    <div class="enn-grid" id="enn-grid"></div>
-    <label style="margin-top:1rem">Wing (optional)</label>
-    <select id="enn-wing">
-      <option value="">No wing / not sure</option>
-      <option>w1</option><option>w2</option><option>w3</option><option>w4</option>
-      <option>w5</option><option>w6</option><option>w7</option><option>w8</option><option>w9</option>
-    </select>
+    <div class="eg" id="eg"></div>
+    <label for="f-wing" style="margin-top:1rem">Wing (optional)</label>
+    <select id="f-wing"><option value="">No wing / not sure</option><option>w1</option><option>w2</option><option>w3</option><option>w4</option><option>w5</option><option>w6</option><option>w7</option><option>w8</option><option>w9</option></select>
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-name')">Back</button>
-    <button class="btn btn-primary" onclick="showScreen('screen-comm-style')">Continue &rarr;</button>
+    <button class="btn" onclick="go('s-name')">Back</button>
+    <button class="btn btn-primary" onclick="go('s-comm')">Continue <svg class="icon"><use href="#i-arrow"/></svg></button>
   </div>
 </div>
 
 <!-- STEP 3 -->
-<div class="screen" id="screen-comm-style">
-  <div class="step-label">Step 3 of 6 — Communication style</div>
+<div class="screen" id="s-comm">
+  <div class="step-label"><svg class="icon-sm" style="color:var(--red)"><use href="#i-chat"/></svg>Step 3 of 6 — Communication style</div>
   <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
   <h2>How you communicate</h2>
   <div class="card">
     <h3>When you have something important to say, you prefer to:</h3>
-    <div class="option-grid" id="comm-channel">
-      <button class="option-btn" onclick="selectOne(this,'comm-channel')">Say it in person or by phone — I want to talk it through</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-channel')">Send a text or message — I need time to think first</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-channel')">Write an email — I want it documented</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-channel')">It depends on the situation</button>
+    <div class="og" id="q-channel">
+      <button class="ob" onclick="so(this)">Say it in person or by phone — I want to talk it through</button>
+      <button class="ob" onclick="so(this)">Send a text or message — I need time to think first</button>
+      <button class="ob" onclick="so(this)">Write an email — I want it documented</button>
+      <button class="ob" onclick="so(this)">It depends on the situation</button>
     </div>
     <h3 style="margin-top:1.25rem">When you're stressed, others would say you tend to:</h3>
-    <div class="option-grid" id="comm-stress">
-      <button class="option-btn" onclick="selectOne(this,'comm-stress')">Get more direct or forceful</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-stress')">Withdraw and go quiet</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-stress')">Try to smooth things over quickly</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-stress')">Overthink and get stuck in my head</button>
+    <div class="og" id="q-stress">
+      <button class="ob" onclick="so(this)">Get more direct or forceful</button>
+      <button class="ob" onclick="so(this)">Withdraw and go quiet</button>
+      <button class="ob" onclick="so(this)">Try to smooth things over quickly</button>
+      <button class="ob" onclick="so(this)">Overthink and get stuck in my head</button>
     </div>
     <h3 style="margin-top:1.25rem">You feel most respected in a conversation when:</h3>
-    <div class="option-grid" id="comm-respect">
-      <button class="option-btn" onclick="selectOne(this,'comm-respect')">People are direct and honest with me</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-respect')">People take time to hear my side</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-respect')">People stay calm and don't escalate</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-respect')">People follow up in writing after</button>
+    <div class="og" id="q-respect">
+      <button class="ob" onclick="so(this)">People are direct and honest with me</button>
+      <button class="ob" onclick="so(this)">People take time to hear my side</button>
+      <button class="ob" onclick="so(this)">People stay calm and don't escalate</button>
+      <button class="ob" onclick="so(this)">People follow up in writing after</button>
     </div>
     <h3 style="margin-top:1.25rem">When receiving feedback, you prefer it to be:</h3>
-    <div class="option-grid" id="comm-feedback">
-      <button class="option-btn" onclick="selectOne(this,'comm-feedback')">Direct and specific — give it to me straight</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-feedback')">Sandwiched with something positive first</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-feedback')">In private, never in front of others</button>
-      <button class="option-btn" onclick="selectOne(this,'comm-feedback')">In writing so I can process at my own pace</button>
+    <div class="og" id="q-feedback">
+      <button class="ob" onclick="so(this)">Direct and specific — give it to me straight</button>
+      <button class="ob" onclick="so(this)">Sandwiched with something positive first</button>
+      <button class="ob" onclick="so(this)">In private, never in front of others</button>
+      <button class="ob" onclick="so(this)">In writing so I can process at my own pace</button>
     </div>
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-enneagram')">Back</button>
-    <button class="btn btn-primary" onclick="showScreen('screen-learning')">Continue &rarr;</button>
+    <button class="btn" onclick="go('s-enn')">Back</button>
+    <button class="btn btn-primary" onclick="go('s-learn')">Continue <svg class="icon"><use href="#i-arrow"/></svg></button>
   </div>
 </div>
 
 <!-- STEP 4 -->
-<div class="screen" id="screen-learning">
-  <div class="step-label">Step 4 of 6 — Learning style</div>
+<div class="screen" id="s-learn">
+  <div class="step-label"><svg class="icon-sm" style="color:var(--red)"><use href="#i-book"/></svg>Step 4 of 6 — Learning style</div>
   <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
   <h2>How you learn best</h2>
   <div class="card">
     <h3>You remember new information best when you:</h3>
-    <div class="option-grid" id="learn-input">
-      <button class="option-btn" onclick="selectOne(this,'learn-input')">Hear it explained out loud</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-input')">Read it or see it written down</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-input')">Watch someone show me how</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-input')">Do it myself, hands-on</button>
+    <div class="og" id="q-input">
+      <button class="ob" onclick="so(this)">Hear it explained out loud</button>
+      <button class="ob" onclick="so(this)">Read it or see it written down</button>
+      <button class="ob" onclick="so(this)">Watch someone show me how</button>
+      <button class="ob" onclick="so(this)">Do it myself, hands-on</button>
     </div>
     <h3 style="margin-top:1.25rem">In a training or meeting, you're most engaged when:</h3>
-    <div class="option-grid" id="learn-engage">
-      <button class="option-btn" onclick="selectOne(this,'learn-engage')">There's discussion and I can ask questions</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-engage')">There are slides or visual materials</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-engage')">I can take notes in my own way</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-engage')">There's a real scenario or case study</button>
+    <div class="og" id="q-engage">
+      <button class="ob" onclick="so(this)">There's discussion and I can ask questions</button>
+      <button class="ob" onclick="so(this)">There are slides or visual materials</button>
+      <button class="ob" onclick="so(this)">I can take notes in my own way</button>
+      <button class="ob" onclick="so(this)">There's a real scenario or case study</button>
     </div>
     <h3 style="margin-top:1.25rem">You're most likely to retain something new if:</h3>
-    <div class="option-grid" id="learn-retain">
-      <button class="option-btn" onclick="selectOne(this,'learn-retain')">Someone follows up with me after</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-retain')">I can teach it to someone else</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-retain')">I have a reference document to check</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-retain')">I practice it right away</button>
+    <div class="og" id="q-retain">
+      <button class="ob" onclick="so(this)">Someone follows up with me after</button>
+      <button class="ob" onclick="so(this)">I can teach it to someone else</button>
+      <button class="ob" onclick="so(this)">I have a reference document to check</button>
+      <button class="ob" onclick="so(this)">I practice it right away</button>
     </div>
     <h3 style="margin-top:1.25rem">When confused or overwhelmed by new content, you tend to:</h3>
-    <div class="option-grid" id="learn-stuck">
-      <button class="option-btn" onclick="selectOne(this,'learn-stuck')">Ask someone immediately</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-stuck')">Look it up on my own</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-stuck')">Sit with it and come back later</button>
-      <button class="option-btn" onclick="selectOne(this,'learn-stuck')">Shut down and need support to re-engage</button>
+    <div class="og" id="q-stuck">
+      <button class="ob" onclick="so(this)">Ask someone immediately</button>
+      <button class="ob" onclick="so(this)">Look it up on my own</button>
+      <button class="ob" onclick="so(this)">Sit with it and come back later</button>
+      <button class="ob" onclick="so(this)">Shut down and need support to re-engage</button>
     </div>
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-comm-style')">Back</button>
-    <button class="btn btn-primary" onclick="showScreen('screen-conflict')">Continue &rarr;</button>
+    <button class="btn" onclick="go('s-comm')">Back</button>
+    <button class="btn btn-primary" onclick="go('s-conflict')">Continue <svg class="icon"><use href="#i-arrow"/></svg></button>
   </div>
 </div>
 
 <!-- STEP 5 -->
-<div class="screen" id="screen-conflict">
-  <div class="step-label">Step 5 of 6 — Conflict and tension</div>
+<div class="screen" id="s-conflict">
+  <div class="step-label"><svg class="icon-sm" style="color:var(--red)"><use href="#i-shield"/></svg>Step 5 of 6 — Conflict and tension</div>
   <div class="progress-bar"><div class="progress-fill" style="width:83%"></div></div>
   <h2>Conflict and hard conversations</h2>
   <div class="card">
     <p style="margin-bottom:1rem">These questions help us support you when things get hard. There are no wrong answers, and you only share what you're comfortable sharing.</p>
     <h3>When there's conflict with a coworker, your first instinct is to:</h3>
-    <div class="option-grid" id="conf-instinct">
-      <button class="option-btn" onclick="selectOne(this,'conf-instinct')">Address it directly, as soon as possible</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-instinct')">Wait and see if it resolves on its own</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-instinct')">Talk to someone I trust first</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-instinct')">Go to a supervisor for guidance</button>
+    <div class="og" id="q-instinct">
+      <button class="ob" onclick="so(this)">Address it directly, as soon as possible</button>
+      <button class="ob" onclick="so(this)">Wait and see if it resolves on its own</button>
+      <button class="ob" onclick="so(this)">Talk to someone I trust first</button>
+      <button class="ob" onclick="so(this)">Go to a supervisor for guidance</button>
     </div>
     <h3 style="margin-top:1.25rem">In a hard conversation, what makes you feel safest?</h3>
-    <div class="option-grid" id="conf-safety">
-      <button class="option-btn" onclick="selectOne(this,'conf-safety')">Knowing the other person isn't angry</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-safety')">Having a mediator or third party present</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-safety')">Knowing I can end the conversation if I need to</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-safety')">Having time to prepare what I want to say</button>
+    <div class="og" id="q-safety">
+      <button class="ob" onclick="so(this)">Knowing the other person isn't angry</button>
+      <button class="ob" onclick="so(this)">Having a mediator or third party present</button>
+      <button class="ob" onclick="so(this)">Knowing I can end the conversation if I need to</button>
+      <button class="ob" onclick="so(this)">Having time to prepare what I want to say</button>
     </div>
     <h3 style="margin-top:1.25rem">After a difficult conversation, you usually need to:</h3>
-    <div class="option-grid" id="conf-after">
-      <button class="option-btn" onclick="selectOne(this,'conf-after')">Be alone and decompress</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-after')">Talk it out with someone I trust</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-after')">Get right back to work — I move on quickly</button>
-      <button class="option-btn" onclick="selectOne(this,'conf-after')">Have written clarity on what was decided</button>
+    <div class="og" id="q-after">
+      <button class="ob" onclick="so(this)">Be alone and decompress</button>
+      <button class="ob" onclick="so(this)">Talk it out with someone I trust</button>
+      <button class="ob" onclick="so(this)">Get right back to work — I move on quickly</button>
+      <button class="ob" onclick="so(this)">Have written clarity on what was decided</button>
     </div>
-    <div class="divider"></div>
+    <div class="div"></div>
     <h3>Are there communication contexts that feel particularly activating for you?</h3>
     <p style="margin-bottom:.75rem;font-size:13px">You don't need to explain why — just flag what's true for you. This helps us support you better.</p>
-    <div class="option-grid" id="conf-activating">
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Raised voices or shouting</button>
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Feeling like I'm in trouble</button>
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Unexpected confrontation</button>
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Silence or being ignored</button>
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Public criticism or correction</button>
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Authority figures who seem angry</button>
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Feeling ganged up on</button>
-      <button class="option-btn" onclick="selectMulti(this,'conf-activating',5)">Not knowing what's coming next</button>
+    <div class="og" id="q-activating">
+      <button class="ob" onclick="sm(this,5)">Raised voices or shouting</button>
+      <button class="ob" onclick="sm(this,5)">Feeling like I'm in trouble</button>
+      <button class="ob" onclick="sm(this,5)">Unexpected confrontation</button>
+      <button class="ob" onclick="sm(this,5)">Silence or being ignored</button>
+      <button class="ob" onclick="sm(this,5)">Public criticism or correction</button>
+      <button class="ob" onclick="sm(this,5)">Authority figures who seem angry</button>
+      <button class="ob" onclick="sm(this,5)">Feeling ganged up on</button>
+      <button class="ob" onclick="sm(this,5)">Not knowing what's coming next</button>
     </div>
-    <label style="margin-top:1rem">Anything else you'd like us to know? (Optional)</label>
-    <textarea id="conf-context" placeholder="Share only what you're comfortable with..."></textarea>
+    <label for="f-confctx" style="margin-top:1rem">Anything else you'd like us to know? (Optional)</label>
+    <textarea id="f-confctx" placeholder="Share only what you're comfortable with..."></textarea>
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-learning')">Back</button>
-    <button class="btn btn-primary" onclick="showScreen('screen-strengths')">Continue &rarr;</button>
+    <button class="btn" onclick="go('s-learn')">Back</button>
+    <button class="btn btn-primary" onclick="go('s-str')">Continue <svg class="icon"><use href="#i-arrow"/></svg></button>
   </div>
 </div>
 
 <!-- STEP 6 -->
-<div class="screen" id="screen-strengths">
-  <div class="step-label">Step 6 of 6 — Strengths and needs</div>
+<div class="screen" id="s-str">
+  <div class="step-label"><svg class="icon-sm" style="color:var(--red)"><use href="#i-spark"/></svg>Step 6 of 6 — Strengths and needs</div>
   <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
   <h2>Your strengths and what you need</h2>
   <div class="card">
     <h3>What do you bring most to your team? (select up to 3)</h3>
-    <div class="option-grid" id="strengths-grid">
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Energy and enthusiasm</button>
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Attention to detail</button>
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Empathy and connection</button>
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Getting things done</button>
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Creative problem-solving</button>
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Keeping the peace</button>
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Asking the hard questions</button>
-      <button class="option-btn" onclick="selectMulti(this,'strengths-grid',3)">Supporting others</button>
+    <div class="og" id="q-strengths">
+      <button class="ob" onclick="sm(this,3)">Energy and enthusiasm</button>
+      <button class="ob" onclick="sm(this,3)">Attention to detail</button>
+      <button class="ob" onclick="sm(this,3)">Empathy and connection</button>
+      <button class="ob" onclick="sm(this,3)">Getting things done</button>
+      <button class="ob" onclick="sm(this,3)">Creative problem-solving</button>
+      <button class="ob" onclick="sm(this,3)">Keeping the peace</button>
+      <button class="ob" onclick="sm(this,3)">Asking the hard questions</button>
+      <button class="ob" onclick="sm(this,3)">Supporting others</button>
     </div>
     <h3 style="margin-top:1.25rem">What do you need most from your supervisor? (select up to 2)</h3>
-    <div class="option-grid" id="needs-grid">
-      <button class="option-btn" onclick="selectMulti(this,'needs-grid',2)">Regular check-ins and connection</button>
-      <button class="option-btn" onclick="selectMulti(this,'needs-grid',2)">Clear expectations and structure</button>
-      <button class="option-btn" onclick="selectMulti(this,'needs-grid',2)">Autonomy to work my own way</button>
-      <button class="option-btn" onclick="selectMulti(this,'needs-grid',2)">Recognition and affirmation</button>
-      <button class="option-btn" onclick="selectMulti(this,'needs-grid',2)">Problem-solving support when I'm stuck</button>
-      <button class="option-btn" onclick="selectMulti(this,'needs-grid',2)">Direct, honest feedback</button>
+    <div class="og" id="q-needs">
+      <button class="ob" onclick="sm(this,2)">Regular check-ins and connection</button>
+      <button class="ob" onclick="sm(this,2)">Clear expectations and structure</button>
+      <button class="ob" onclick="sm(this,2)">Autonomy to work my own way</button>
+      <button class="ob" onclick="sm(this,2)">Recognition and affirmation</button>
+      <button class="ob" onclick="sm(this,2)">Problem-solving support when I'm stuck</button>
+      <button class="ob" onclick="sm(this,2)">Direct, honest feedback</button>
     </div>
-    <label style="margin-top:1.25rem">Anything else you want your supervisor or team to know?</label>
-    <textarea id="extra-context" placeholder="Open space — share whatever feels useful..."></textarea>
+    <label for="f-extra" style="margin-top:1.25rem">Anything else you want your supervisor or team to know about how you work best?</label>
+    <textarea id="f-extra" placeholder="Open space — share whatever feels useful..."></textarea>
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-conflict')">Back</button>
-    <button class="btn btn-primary" onclick="submitAssessment()">Generate my profile &#10024;</button>
+    <button class="btn" onclick="go('s-conflict')">Back</button>
+    <button class="btn btn-primary" onclick="submitAssessment()">Generate my profile <svg class="icon"><use href="#i-spark"/></svg></button>
   </div>
 </div>
 
 <!-- GENERATING -->
-<div class="screen" id="screen-generating">
-  <div style="text-align:center;padding:4rem 1rem">
-    <div class="loading-dots" style="justify-content:center;margin-bottom:1.5rem"><span></span><span></span><span></span></div>
-    <h2>Building your profile</h2>
-    <p id="gen-status">Analyzing your responses...</p>
+<div class="screen" id="s-gen">
+  <div class="loading-wrap">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <h2 style="justify-content:center">Building your profile</h2>
+    <p id="gen-msg">Analyzing your responses...</p>
   </div>
 </div>
 
 <!-- RESULT -->
-<div class="screen" id="screen-result">
+<div class="screen" id="s-result">
   <div class="logo-bar" style="margin-bottom:1rem">
-    <div class="logo-dot"></div>
-    <span class="logo-text" id="result-name-bar">Staff Profile</span>
-    <span class="logo-sub" id="result-date-bar"></span>
+    <div class="logo-mark"><div class="logo-dot"></div><span class="logo-text" id="r-name">Staff Profile</span></div>
+    <span class="logo-sub" id="r-date"></span>
   </div>
-  <div id="email-status-banner"></div>
+  <div id="r-banner"></div>
   <div class="card card-accent" style="margin-bottom:.75rem">
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:.75rem">
-      <span class="badge badge-red" id="result-enn-badge"></span>
-      <span class="badge badge-blue" id="result-pronouns-badge"></span>
-      <span class="badge badge-gray" id="result-role-badge"></span>
-      <span class="badge badge-gray" id="result-date-badge"></span>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:.85rem">
+      <span class="badge br" id="r-enn"></span>
+      <span class="badge bb" id="r-pron"></span>
+      <span class="badge bg" id="r-role"></span>
     </div>
-    <div class="result-label">Your communication profile</div>
-    <div class="ai-response" id="result-comm-text"></div>
+    <div class="rl"><svg class="icon-sm"><use href="#i-chat"/></svg>Your communication profile</div>
+    <div class="at" id="r-comm"></div>
   </div>
   <div class="card" style="margin-bottom:.75rem">
-    <div class="result-label">Your learning style</div>
-    <div class="ai-response" id="result-learn-text"></div>
+    <div class="rl"><svg class="icon-sm"><use href="#i-book"/></svg>Your learning style</div>
+    <div class="at" id="r-learn"></div>
   </div>
   <div class="card">
-    <div class="result-label">Recommendations for your supervisor and team</div>
-    <div class="ai-response" id="result-rec-text"></div>
+    <div class="rl"><svg class="icon-sm"><use href="#i-users"/></svg>Recommendations for your supervisor and team</div>
+    <div class="at" id="r-rec"></div>
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-home')">&#8962; Home</button>
-    <button class="btn btn-primary" onclick="showScreen('screen-convo-prep')">&#128172; Prepare for a conversation</button>
+    <button class="btn" onclick="go('s-home')"><svg class="icon"><use href="#i-home"/></svg> Home</button>
+    <button class="btn btn-primary" onclick="go('s-prep')"><svg class="icon"><use href="#i-chat"/></svg> Prepare for a conversation</button>
   </div>
 </div>
 
-<!-- PROFILE LOOKUP -->
-<div class="screen" id="screen-my-profile-lookup">
-  <h2>View your profile</h2>
+<!-- LOOKUP -->
+<div class="screen" id="s-lookup">
+  <h2><svg class="icon" style="color:var(--red)"><use href="#i-user"/></svg>View your profile</h2>
   <div class="card">
     <p style="margin-bottom:1rem">Enter your name to pull up your profile.</p>
-    <label for="lookup-name">Your name</label>
-    <input type="text" id="lookup-name" placeholder="First and last name">
+    <label for="f-lookup">Your name</label>
+    <input type="text" id="f-lookup" placeholder="First and last name" onkeydown="if(event.key==='Enter')lookupProfile()">
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-home')">Back</button>
-    <button class="btn btn-primary" onclick="lookupProfile()">Find my profile</button>
+    <button class="btn" onclick="go('s-home')">Back</button>
+    <button class="btn btn-primary" onclick="lookupProfile()"><svg class="icon"><use href="#i-search"/></svg> Find my profile</button>
   </div>
-  <div id="lookup-result" style="margin-top:1rem"></div>
+  <div id="lookup-out" style="margin-top:1rem"></div>
 </div>
 
 <!-- CONVO PREP -->
-<div class="screen" id="screen-convo-prep">
-  <h2>Prepare for a conversation</h2>
-  <div class="alert alert-info" style="margin-bottom:1rem">This tool helps you think through a challenging conversation. You'll see a coworker's Enneagram type and general traits. Their detailed assessment stays private.</div>
+<div class="screen" id="s-prep">
+  <h2><svg class="icon" style="color:var(--red)"><use href="#i-chat"/></svg>Prepare for a conversation</h2>
+  <div class="alert ai"><svg class="icon-sm"><use href="#i-shield"/></svg><span>This tool helps you think through a challenging conversation. You'll see a coworker's Enneagram type and general traits. Their detailed assessment stays private.</span></div>
   <div class="card">
-    <label for="prep-my-name">Your name</label>
-    <input type="text" id="prep-my-name" placeholder="Your name">
-    <label for="prep-their-name">Who is the conversation with?</label>
-    <input type="text" id="prep-their-name" placeholder="Their name">
-    <label for="prep-topic">What's the conversation about?</label>
-    <textarea id="prep-topic" placeholder="Describe what you need to discuss..."></textarea>
-    <label for="prep-goal">What outcome do you hope for?</label>
-    <input type="text" id="prep-goal" placeholder="e.g. We understand each other better, we agree on next steps...">
+    <label for="p-my">Your name</label><input type="text" id="p-my" placeholder="Your name">
+    <label for="p-their">Who is the conversation with?</label><input type="text" id="p-their" placeholder="Their name">
+    <label for="p-topic">What's the conversation about?</label><textarea id="p-topic" placeholder="Describe what you need to discuss..."></textarea>
+    <label for="p-goal">What outcome do you hope for?</label><input type="text" id="p-goal" placeholder="e.g. We understand each other better, we agree on next steps...">
   </div>
   <div class="btn-row">
-    <button class="btn" onclick="showScreen('screen-home')">Back</button>
-    <button class="btn btn-primary" onclick="runConvoPrep()">Get my strategy &#10024;</button>
+    <button class="btn" onclick="go('s-home')">Back</button>
+    <button class="btn btn-primary" onclick="runConvoPrep()">Get my strategy <svg class="icon"><use href="#i-spark"/></svg></button>
   </div>
-  <div id="prep-result" style="margin-top:1rem"></div>
+  <div id="prep-out" style="margin-top:1rem"></div>
 </div>
 
 <!-- ADMIN PW -->
-<div class="screen" id="screen-admin-pw">
-  <div class="pw-wrap">
-    <div style="margin-bottom:1.5rem">
-      <div style="font-size:36px;margin-bottom:.5rem">&#128274;</div>
-      <h2>Admin access</h2>
-      <p>JOLT admin credentials only.</p>
-    </div>
-    <label for="admin-pw-input">Password</label>
-    <input type="password" id="admin-pw-input" placeholder="Enter password" style="margin-bottom:1rem" onkeydown="if(event.key==='Enter')checkAdminPw()">
-    <div id="pw-error" style="color:var(--red);font-size:13px;display:none;margin-bottom:.5rem">Incorrect password.</div>
+<div class="screen" id="s-pw">
+  <div class="pw">
+    <span class="icon-circle" style="width:54px;height:54px;margin-bottom:.75rem"><svg class="icon" style="width:26px;height:26px"><use href="#i-lock"/></svg></span>
+    <h2 style="justify-content:center">Admin access</h2>
+    <p style="margin-bottom:1.25rem">JOLT admin credentials only.</p>
+    <label for="f-pw" style="text-align:left">Password</label>
+    <input type="password" id="f-pw" placeholder="Enter password" style="margin-bottom:1rem" onkeydown="if(event.key==='Enter')chkpw()">
+    <div id="pw-err" style="color:var(--red);font-size:13px;display:none;margin-bottom:.5rem">Incorrect password.</div>
     <div class="btn-row" style="justify-content:center">
-      <button class="btn" onclick="showScreen('screen-home')">Back</button>
-      <button class="btn btn-primary" onclick="checkAdminPw()">Enter &rarr;</button>
+      <button class="btn" onclick="go('s-home')">Back</button>
+      <button class="btn btn-primary" onclick="chkpw()">Enter <svg class="icon"><use href="#i-arrow"/></svg></button>
     </div>
   </div>
 </div>
 
 <!-- ADMIN -->
-<div class="screen" id="screen-admin">
+<div class="screen" id="s-admin">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap">
-    <h2 style="margin:0">Admin dashboard</h2>
-    <span class="badge badge-red">Admin</span>
-    <button class="btn btn-sm" style="margin-left:auto" onclick="showScreen('screen-home')">Exit</button>
+    <h2 style="margin:0"><svg class="icon" style="color:var(--red)"><use href="#i-gear"/></svg>Admin dashboard</h2>
+    <span class="badge br"><svg class="icon-sm"><use href="#i-lock"/></svg>Admin</span>
+    <button class="btn btn-sm" style="margin-left:auto" onclick="go('s-home')">Exit</button>
   </div>
-  <div class="tab-row">
-    <button class="tab active" onclick="adminTab('overview',this)">Overview</button>
-    <button class="tab" onclick="adminTab('profiles',this)">Staff profiles</button>
-    <button class="tab" onclick="adminTab('compare',this)">Compare</button>
-    <button class="tab" onclick="adminTab('team',this)">Team dynamics</button>
-    <button class="tab" onclick="adminTab('newhire',this)">New hire</button>
-    <button class="tab" onclick="adminTab('settings',this)">Settings</button>
+  <div class="tr">
+    <button class="tab active" onclick="atab('ov',this)"><svg class="icon-sm"><use href="#i-chart"/></svg>Overview</button>
+    <button class="tab" onclick="atab('pf',this)"><svg class="icon-sm"><use href="#i-users"/></svg>Staff profiles</button>
+    <button class="tab" onclick="atab('co',this)"><svg class="icon-sm"><use href="#i-compare"/></svg>Compare</button>
+    <button class="tab" onclick="atab('td',this)"><svg class="icon-sm"><use href="#i-grid"/></svg>Team dynamics</button>
+    <button class="tab" onclick="atab('nh',this)"><svg class="icon-sm"><use href="#i-plus"/></svg>New hire</button>
+    <button class="tab" onclick="atab('st',this)"><svg class="icon-sm"><use href="#i-mail"/></svg>Settings</button>
   </div>
-  <div id="admin-tab-overview">
-    <div class="metrics-row" id="admin-metrics"></div>
-    <div class="card"><h3 style="margin-bottom:.75rem">Team roster</h3><div id="admin-snapshot"></div></div>
+
+  <div id="at-ov">
+    <div class="mr" id="a-metrics"></div>
+    <div class="card"><h3 style="margin-bottom:.75rem">Team roster</h3><div id="a-roster"></div></div>
   </div>
-  <div id="admin-tab-profiles" style="display:none">
-    <div class="staff-grid" id="admin-staff-grid"></div>
-    <div id="admin-profile-detail"></div>
+
+  <div id="at-pf" style="display:none">
+    <div class="sg" id="a-grid"></div>
+    <div id="a-detail"></div>
   </div>
-  <div id="admin-tab-compare" style="display:none">
+
+  <div id="at-co" style="display:none">
     <div class="card" style="margin-bottom:1rem">
       <h3 style="margin-bottom:.75rem">Side-by-side comparison</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
-        <div><label>Staff member A</label><select id="compare-a"></select></div>
-        <div><label>Staff member B</label><select id="compare-b"></select></div>
+        <div><label for="c-a">Staff member A</label><select id="c-a"></select></div>
+        <div><label for="c-b">Staff member B</label><select id="c-b"></select></div>
       </div>
-      <button class="btn btn-primary" onclick="runCompare()">Compare and get strategy &#10024;</button>
+      <button class="btn btn-primary" onclick="runCompare()">Compare and get strategy <svg class="icon"><use href="#i-spark"/></svg></button>
     </div>
-    <div id="compare-result"></div>
+    <div id="co-out"></div>
   </div>
-  <div id="admin-tab-team" style="display:none">
+
+  <div id="at-td" style="display:none">
     <div class="card" style="margin-bottom:1rem">
       <h3 style="margin-bottom:.5rem">Team dynamics overview</h3>
       <p style="margin-bottom:1rem">AI-generated snapshot of your team's collective communication patterns, friction risks, and training recommendations. Requires at least 4 profiles.</p>
-      <button class="btn btn-primary" onclick="runTeamDynamics()">Generate team snapshot &#10024;</button>
+      <button class="btn btn-primary" onclick="runTeamDynamics()">Generate team snapshot <svg class="icon"><use href="#i-spark"/></svg></button>
     </div>
-    <div id="team-dynamics-result"></div>
+    <div id="td-out"></div>
   </div>
-  <div id="admin-tab-newhire" style="display:none">
+
+  <div id="at-nh" style="display:none">
     <div class="card" style="margin-bottom:1rem">
       <h3 style="margin-bottom:.5rem">New hire readiness report</h3>
       <p style="margin-bottom:1rem">Generate a communication brief for a new hire based on existing staff profiles.</p>
-      <label for="newhire-name">New hire's name</label>
-      <input type="text" id="newhire-name" placeholder="First and last name">
-      <label for="newhire-role">Their role</label>
-      <input type="text" id="newhire-role" placeholder="e.g. Peer Support Specialist">
-      <div class="btn-row"><button class="btn btn-primary" onclick="runNewHireReport()">Generate report &#10024;</button></div>
+      <label for="nh-name">New hire's name</label><input type="text" id="nh-name" placeholder="First and last name">
+      <label for="nh-role">Their role</label><input type="text" id="nh-role" placeholder="e.g. Peer Recovery Navigator">
+      <div class="btn-row"><button class="btn btn-primary" onclick="runNewHire()">Generate report <svg class="icon"><use href="#i-spark"/></svg></button></div>
     </div>
-    <div id="newhire-result"></div>
+    <div id="nh-out"></div>
   </div>
-  <div id="admin-tab-settings" style="display:none">
+
+  <div id="at-st" style="display:none">
     <div class="card">
-      <h3 style="margin-bottom:.75rem">Email notification settings</h3>
-      <p style="margin-bottom:1rem">Notifications go to <strong>admin@joltfoundation.org</strong> each time a staff member completes an assessment. Connect via Outlook/Microsoft 365 in EmailJS.</p>
-      <div id="email-settings-status"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:.75rem">
-        <div><label style="margin-top:0">Public Key</label><input type="text" id="ejs-pubkey-settings" placeholder="user_xxx" style="font-size:12px"></div>
-        <div><label style="margin-top:0">Service ID</label><input type="text" id="ejs-service-settings" placeholder="service_xxx" style="font-size:12px"></div>
-        <div><label style="margin-top:0">Template ID</label><input type="text" id="ejs-template-settings" placeholder="template_xxx" style="font-size:12px"></div>
-      </div>
-      <div class="btn-row" style="margin-top:.75rem">
-        <button class="btn btn-primary btn-sm" onclick="saveEmailConfigFromSettings()">&#10003; Save</button>
-        <button class="btn btn-sm" onclick="testEmail()">&#9993; Send test email</button>
-      </div>
-      <div id="settings-email-status" style="margin-top:.5rem;font-size:13px"></div>
+      <h3 style="margin-bottom:.75rem">Email notifications</h3>
+      <div class="alert as"><svg class="icon-sm"><use href="#i-check"/></svg><span>Email notifications are built into this version. Every completed assessment automatically sends a notification to <strong>admin@joltfoundation.org</strong> from any staff member's browser — no per-browser setup needed.</span></div>
+      <button class="btn btn-sm" onclick="testEmail()"><svg class="icon"><use href="#i-send"/></svg> Send test email</button>
+      <div id="st-msg" style="font-size:13px;margin-top:.5rem"></div>
     </div>
     <div class="card">
-      <h3 style="margin-bottom:.5rem">EmailJS template variables</h3>
-      <p style="margin-bottom:.75rem">Use these in your Outlook-connected EmailJS template body:</p>
-      <div class="mono">
-        New assessment: {{staff_name}} ({{staff_role}}, {{pronouns}})<br>
-        Enneagram: {{enneagram}} | Submitted: {{submitted_at}}<br><br>
-        COMMUNICATION PROFILE:<br>{{comm_profile}}<br><br>
-        LEARNING STYLE:<br>{{learn_profile}}<br><br>
-        RECOMMENDATIONS:<br>{{recommendations}}<br><br>
-        Activating contexts: {{activating}}<br>
-        Strengths: {{strengths}}<br>
-        Needs from supervisor: {{supervisor_needs}}
-      </div>
+      <h3 style="margin-bottom:.5rem">About this tool</h3>
+      <p>Profiles are stored in each person's browser and emailed to admin on submission. The admin dashboard shows profiles created in this browser. Assessment results emailed to admin@joltfoundation.org are the complete organizational record.</p>
     </div>
   </div>
 </div>
@@ -523,346 +538,316 @@ textarea { min-height: 80px; resize: vertical; }
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
-// Replace with your actual Anthropic API key before hosting
-const ANTHROPIC_API_KEY = 'YOUR_ANTHROPIC_API_KEY_HERE';
+// ══════════ CONFIGURATION ══════════
+// EmailJS credentials — baked in so notifications work from every browser
+const EJS_PUBLIC_KEY = 'IzQ8iFN591traoMM7';
+const EJS_SERVICE_ID = 'service_fzrmcqq';
+const EJS_TEMPLATE_ID = 'template_11zoa0p';
 const ADMIN_EMAIL = 'admin@joltfoundation.org';
+const ADMIN_PASSWORD = 'JOLTAdm!n';
+// ═══════════════════════════════════
 
 const ENN=[
-  {n:1,name:'The Reformer',core:'Principled, purposeful, self-controlled. Driven to do things right.'},
-  {n:2,name:'The Helper',core:'Caring, generous, people-pleasing. Driven by connection and being needed.'},
-  {n:3,name:'The Achiever',core:'Adaptable, ambitious, image-conscious. Driven by success and efficiency.'},
-  {n:4,name:'The Individualist',core:'Sensitive, expressive, self-aware. Driven by identity and meaning.'},
-  {n:5,name:'The Investigator',core:'Perceptive, innovative, private. Driven by understanding and autonomy.'},
-  {n:6,name:'The Loyalist',core:'Committed, security-oriented, anxious. Driven by trust and safety.'},
-  {n:7,name:'The Enthusiast',core:'Spontaneous, versatile, scattered. Driven by possibility and experience.'},
-  {n:8,name:'The Challenger',core:'Self-confident, decisive, confrontational. Driven by control and impact.'},
-  {n:9,name:'The Peacemaker',core:'Receptive, reassuring, complacent. Driven by harmony and stability.'}
+ {n:1,name:'The Reformer',core:'Principled, purposeful, self-controlled. Driven to do things right.'},
+ {n:2,name:'The Helper',core:'Caring, generous, people-pleasing. Driven by connection and being needed.'},
+ {n:3,name:'The Achiever',core:'Adaptable, ambitious, image-conscious. Driven by success and efficiency.'},
+ {n:4,name:'The Individualist',core:'Sensitive, expressive, self-aware. Driven by identity and meaning.'},
+ {n:5,name:'The Investigator',core:'Perceptive, innovative, private. Driven by understanding and autonomy.'},
+ {n:6,name:'The Loyalist',core:'Committed, security-oriented, anxious. Driven by trust and safety.'},
+ {n:7,name:'The Enthusiast',core:'Spontaneous, versatile, scattered. Driven by possibility and experience.'},
+ {n:8,name:'The Challenger',core:'Self-confident, decisive, protective. Driven by strength and impact.'},
+ {n:9,name:'The Peacemaker',core:'Receptive, reassuring, steady. Driven by harmony and stability.'}
 ];
-
 let selEnn=null;
-let aData={};
-let profiles={};
 
-function initEnnGrid(){
-  const g=document.getElementById('enn-grid');g.innerHTML='';
-  ENN.forEach(e=>{
-    const b=document.createElement('button');b.className='enn-btn';
-    b.innerHTML=`<span class="enn-num">${e.n}</span>${e.name}`;
-    b.onclick=()=>{document.querySelectorAll('.enn-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selEnn=e;};
-    g.appendChild(b);
-  });
+// ── storage (persists across page reloads, per browser) ──
+function loadProfiles(){try{return JSON.parse(localStorage.getItem('jolt_profiles')||'{}')}catch(e){return{}}}
+function saveProfiles(p){try{localStorage.setItem('jolt_profiles',JSON.stringify(p))}catch(e){}}
+function findProfile(name){const ps=loadProfiles();const k=Object.keys(ps).find(k=>k.toLowerCase()===name.toLowerCase().trim());return k?ps[k]:null}
+
+// ── markdown stripper: cleans AI output for display & email ──
+function clean(t){return (t||'').replace(/^#{1,6}\s*/gm,'').replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').trim()}
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='s-admin')refreshAdmin();window.scrollTo(0,0)}
+function so(btn){btn.parentNode.querySelectorAll('.ob').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel')}
+function sm(btn,max){const sel=btn.parentNode.querySelectorAll('.ob.sel');if(btn.classList.contains('sel')){btn.classList.remove('sel')}else if(sel.length<max){btn.classList.add('sel')}}
+function getSel(id){return Array.from(document.querySelectorAll('#'+id+' .ob.sel')).map(b=>b.textContent.trim())}
+
+function initEnn(){
+ const g=document.getElementById('eg');g.innerHTML='';
+ ENN.forEach(e=>{const b=document.createElement('button');b.className='eb';
+  b.innerHTML='<span class="en">'+e.n+'</span>'+e.name;
+  b.onclick=()=>{document.querySelectorAll('.eb').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');selEnn=e};
+  g.appendChild(b)});
 }
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if(id==='screen-admin')refreshAdmin();
-}
-
-function selectOne(btn,group){
-  document.querySelectorAll(`#${group} .option-btn`).forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
-
-function selectMulti(btn,group,max){
-  const sel=document.querySelectorAll(`#${group} .option-btn.selected`);
-  if(btn.classList.contains('selected')){btn.classList.remove('selected');}
-  else if(sel.length<max){btn.classList.add('selected');}
-}
-
-function getSel(group){return Array.from(document.querySelectorAll(`#${group} .option-btn.selected`)).map(b=>b.textContent.trim());}
-
-function goStep2(){
-  if(!document.getElementById('staff-name').value.trim()){alert('Please enter your name.');return;}
-  showScreen('screen-enneagram');initEnnGrid();
-}
-
-function getPronouns(){
-  const c=document.getElementById('staff-pronouns-custom').value.trim();
-  const s=document.getElementById('staff-pronouns').value;
-  return c||s||'not specified';
-}
+function goStep2(){if(!document.getElementById('f-name').value.trim()){alert('Please enter your name.');return}go('s-enn');initEnn()}
+function getPronouns(){const c=document.getElementById('f-pronc').value.trim();const s=document.getElementById('f-pron').value;return c||s||'not specified'}
 
 async function claude(prompt){
-  const r=await fetch('/.netlify/functions/claude',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
-  });
-  const d=await r.json();
-  if(d.error)throw new Error(d.error.message);
-  return d.content?.[0]?.text||'';
+ const r=await fetch('/.netlify/functions/claude',{
+  method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt+'\n\nIMPORTANT: Respond in plain text only. Do not use markdown formatting — no asterisks, no pound signs, no bold markers. Use plain numbered lists like "1." where needed.'}]})
+ });
+ const d=await r.json();
+ if(d.error)throw new Error(typeof d.error==='string'?d.error:d.error.message);
+ return clean(d.content?.[0]?.text||'');
 }
 
 async function submitAssessment(){
-  const name=document.getElementById('staff-name').value.trim();
-  const preferred=document.getElementById('staff-preferred').value.trim();
-  const pronouns=getPronouns();
-  const role=document.getElementById('staff-role-input').value.trim();
-  const email=document.getElementById('staff-email').value.trim();
-  const wing=document.getElementById('enn-wing').value;
-  aData={name,preferred,pronouns,role,email,enneagram:selEnn,wing,timestamp:new Date().toISOString(),
-    comm:{channel:getSel('comm-channel'),stress:getSel('comm-stress'),respect:getSel('comm-respect'),feedback:getSel('comm-feedback')},
-    learning:{input:getSel('learn-input'),engage:getSel('learn-engage'),retain:getSel('learn-retain'),stuck:getSel('learn-stuck')},
-    conflict:{instinct:getSel('conf-instinct'),safety:getSel('conf-safety'),after:getSel('conf-after'),activating:getSel('conf-activating'),context:document.getElementById('conf-context').value.trim()},
-    strengths:getSel('strengths-grid'),needs:getSel('needs-grid'),extra:document.getElementById('extra-context').value.trim()
-  };
-  showScreen('screen-generating');
-  const d=aData;const dn=d.preferred||d.name;
-  const el=d.enneagram?`Enneagram ${d.enneagram.n}${wing} — ${d.enneagram.name} (${d.enneagram.core})`:'Enneagram not specified';
-  const an=d.conflict.activating.length>0?`Activating contexts flagged: ${d.conflict.activating.join(', ')}.`:'No specific activating contexts flagged.';
-  try{
-    const[ct,lt,rt]=await Promise.all([
-      claude(`Trauma-informed, harm reduction organizational consultant for JOLT Foundation in Peoria, IL. Write a warm, direct 3-4 sentence communication style profile for ${dn} (${d.role}), pronouns ${d.pronouns}. Second-person. Enneagram: ${el}. Channel: ${d.comm.channel.join(', ')}. Stress: ${d.comm.stress.join(', ')}. Respected when: ${d.comm.respect.join(', ')}. Feedback: ${d.comm.feedback.join(', ')}. ${an} Strengths-based, no headers.`),
-      claude(`Trauma-informed learning consultant for JOLT Foundation. 3-4 sentence learning style profile for ${dn} (${d.role}), pronouns ${d.pronouns}. Second-person. Enneagram: ${el}. Retains by: ${d.learning.input.join(', ')}. Engaged when: ${d.learning.engage.join(', ')}. Retains when: ${d.learning.retain.join(', ')}. Stuck: ${d.learning.stuck.join(', ')}. Practical, no headers.`),
-      claude(`Harm reduction, trauma-informed consultant for JOLT Foundation. 5 numbered recommendations for supervisors working with ${dn} (${d.role}), pronouns ${d.pronouns}. Enneagram: ${el}. Strengths: ${d.strengths.join(', ')}. Needs: ${d.needs.join(', ')}. Conflict: ${d.conflict.instinct.join(', ')}. Safe when: ${d.conflict.safety.join(', ')}. After convos: ${d.conflict.after.join(', ')}. ${an} 1-2 sentences each.`)
-    ]);
-    aData.ai_comm=ct;aData.ai_learn=lt;aData.ai_rec=rt;
-    profiles[name]=aData;
-    document.getElementById('result-name-bar').textContent=dn;
-    document.getElementById('result-date-bar').textContent=new Date().toLocaleDateString();
-    document.getElementById('result-enn-badge').textContent=d.enneagram?`Enneagram ${d.enneagram.n}${wing}`:'Enneagram TBD';
-    const pb=document.getElementById('result-pronouns-badge');
-    if(d.pronouns&&d.pronouns!=='not specified'){pb.textContent=d.pronouns;}else{pb.style.display='none';}
-    document.getElementById('result-role-badge').textContent=d.role||'JOLT Staff';
-    document.getElementById('result-date-badge').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    document.getElementById('result-comm-text').textContent=ct;
-    document.getElementById('result-learn-text').textContent=lt;
-    document.getElementById('result-rec-text').textContent=rt;
-    await sendEmail(aData);
-    document.getElementById('email-status-banner').innerHTML=`<div class="alert alert-success" style="margin-bottom:1rem">&#10003; Profile saved. Email notification sent to ${ADMIN_EMAIL}</div>`;
-    showScreen('screen-result');
-  }catch(e){
-    document.getElementById('gen-status').textContent='Something went wrong: '+e.message+'. Check your API key configuration.';
-  }
+ const name=document.getElementById('f-name').value.trim();
+ const preferred=document.getElementById('f-pref').value.trim();
+ const pronouns=getPronouns();
+ const role=document.getElementById('f-role').value.trim();
+ const email=document.getElementById('f-email').value.trim();
+ const wing=document.getElementById('f-wing').value;
+ const data={name,preferred,pronouns,role,email,enneagram:selEnn,wing,timestamp:new Date().toISOString(),
+  comm:{channel:getSel('q-channel'),stress:getSel('q-stress'),respect:getSel('q-respect'),feedback:getSel('q-feedback')},
+  learning:{input:getSel('q-input'),engage:getSel('q-engage'),retain:getSel('q-retain'),stuck:getSel('q-stuck')},
+  conflict:{instinct:getSel('q-instinct'),safety:getSel('q-safety'),after:getSel('q-after'),activating:getSel('q-activating'),context:document.getElementById('f-confctx').value.trim()},
+  strengths:getSel('q-strengths'),needs:getSel('q-needs'),extra:document.getElementById('f-extra').value.trim(),notes:[]};
+
+ go('s-gen');
+ const dn=preferred||name;
+ const el=selEnn?('Enneagram '+selEnn.n+wing+' — '+selEnn.name+' ('+selEnn.core+')'):'Enneagram not specified';
+ const an=data.conflict.activating.length>0?('Activating contexts flagged: '+data.conflict.activating.join(', ')+'.'):'No specific activating contexts flagged.';
+
+ try{
+  document.getElementById('gen-msg').textContent='Generating your communication profile...';
+  const[ct,lt,rt]=await Promise.all([
+   claude('You are a trauma-informed organizational consultant for JOLT Foundation in Peoria, IL. Write a warm, direct 3-4 sentence communication style profile for '+dn+' ('+role+'), pronouns '+pronouns+'. Second-person. '+el+'. Preferred channel: '+data.comm.channel.join(', ')+'. Under stress: '+data.comm.stress.join(', ')+'. Feels respected when: '+data.comm.respect.join(', ')+'. Feedback preference: '+data.comm.feedback.join(', ')+'. '+an+' Strengths-based, no headers, just prose.'),
+   claude('You are a trauma-informed learning consultant for JOLT Foundation. Write a warm, direct 3-4 sentence learning style profile for '+dn+' ('+role+'), pronouns '+pronouns+'. Second-person. '+el+'. Retains info by: '+data.learning.input.join(', ')+'. Engaged when: '+data.learning.engage.join(', ')+'. Retains material when: '+data.learning.retain.join(', ')+'. When stuck: '+data.learning.stuck.join(', ')+'. Practical, no headers, just prose.'),
+   claude('You are a trauma-informed organizational consultant for JOLT Foundation. Write exactly 5 numbered recommendations for supervisors and teammates working with '+dn+' ('+role+'), pronouns '+pronouns+'. '+el+'. Strengths: '+data.strengths.join(', ')+'. Needs from supervisors: '+data.needs.join(', ')+'. Conflict instinct: '+data.conflict.instinct.join(', ')+'. Feels safe when: '+data.conflict.safety.join(', ')+'. After hard conversations needs: '+data.conflict.after.join(', ')+'. '+an+' Extra context: '+(data.conflict.context||'none')+'. Each recommendation 1-2 sentences, plain numbered list, no title or heading.')
+  ]);
+  data.ai_comm=ct;data.ai_learn=lt;data.ai_rec=rt;
+
+  const ps=loadProfiles();ps[name]=data;saveProfiles(ps);
+
+  document.getElementById('gen-msg').textContent='Sending notification...';
+  const sent=await sendEmail(data);
+
+  document.getElementById('r-name').textContent=dn;
+  document.getElementById('r-date').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('r-enn').innerHTML=selEnn?('Enneagram '+selEnn.n+wing):'Enneagram TBD';
+  const pb=document.getElementById('r-pron');
+  if(pronouns!=='not specified'){pb.textContent=pronouns;pb.style.display=''}else{pb.style.display='none'}
+  document.getElementById('r-role').textContent=role||'JOLT Staff';
+  document.getElementById('r-comm').textContent=ct;
+  document.getElementById('r-learn').textContent=lt;
+  document.getElementById('r-rec').textContent=rt;
+  document.getElementById('r-banner').innerHTML=sent
+   ?'<div class="alert as"><svg class="icon-sm"><use href="#i-check"/></svg><span>Profile saved. Notification sent to '+ADMIN_EMAIL+'</span></div>'
+   :'<div class="alert aw"><svg class="icon-sm"><use href="#i-mail"/></svg><span>Profile saved. Email notification could not be sent — please let your supervisor know you completed the assessment.</span></div>';
+  go('s-result');
+ }catch(e){
+  document.getElementById('gen-msg').textContent='Something went wrong: '+e.message+'. Please try again or contact admin.';
+ }
 }
 
 async function sendEmail(data){
-  const cfg=loadEjsCfg();if(!cfg?.pubkey)return;
-  try{
-    emailjs.init(cfg.pubkey);
-    await emailjs.send(cfg.service,cfg.template,{
-      to_email:ADMIN_EMAIL,staff_name:data.preferred||data.name,staff_role:data.role||'Not specified',
-      pronouns:data.pronouns||'not specified',
-      enneagram:data.enneagram?`${data.enneagram.n}${data.wing||''} — ${data.enneagram.name}`:'Not specified',
-      submitted_at:new Date(data.timestamp).toLocaleString('en-US',{dateStyle:'full',timeStyle:'short'}),
-      comm_profile:data.ai_comm||'',learn_profile:data.ai_learn||'',recommendations:data.ai_rec||'',
-      activating:(data.conflict?.activating||[]).join(', ')||'None flagged',
-      strengths:(data.strengths||[]).join(', ')||'Not specified',
-      supervisor_needs:(data.needs||[]).join(', ')||'Not specified'
-    });
-  }catch(e){console.log('EmailJS:',e);}
-}
-
-function lookupProfile(){
-  const name=document.getElementById('lookup-name').value.trim();
-  if(!name)return;
-  const p=profiles[name]||profiles[Object.keys(profiles).find(k=>k.toLowerCase()===name.toLowerCase())];
-  if(!p){document.getElementById('lookup-result').innerHTML=`<div class="alert alert-info">No profile found for "${name}". Have you completed the assessment yet?</div>`;return;}
-  const ei=p.enneagram?ENN.find(e=>e.n===p.enneagram.n):null;
-  const dn=p.preferred||p.name;
-  document.getElementById('lookup-result').innerHTML=`
-    <div class="card card-accent">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem">
-        <span class="badge badge-red">${p.enneagram?'Enneagram '+p.enneagram.n+(p.wing||''):'Enneagram TBD'}</span>
-        ${p.pronouns&&p.pronouns!=='not specified'?`<span class="badge badge-blue">${p.pronouns}</span>`:''}
-        <span class="badge badge-gray">${p.role||'JOLT Staff'}</span>
-      </div>
-      ${ei?`<p style="font-size:13px;margin-bottom:1rem"><strong>${ei.name}</strong> — ${ei.core}</p>`:''}
-      <div class="result-label">Your communication profile</div>
-      <div class="ai-response" style="margin-bottom:1rem">${p.ai_comm||'—'}</div>
-      <div class="result-label">Your learning style</div>
-      <div class="ai-response" style="margin-bottom:1rem">${p.ai_learn||'—'}</div>
-      <div class="result-label">Recommendations for your team</div>
-      <div class="ai-response">${p.ai_rec||'—'}</div>
-    </div>`;
-}
-
-async function runConvoPrep(){
-  const mn=document.getElementById('prep-my-name').value.trim();
-  const tn=document.getElementById('prep-their-name').value.trim();
-  const topic=document.getElementById('prep-topic').value.trim();
-  const goal=document.getElementById('prep-goal').value.trim();
-  if(!mn||!tn||!topic){alert('Please fill in your name, their name, and the topic.');return;}
-  document.getElementById('prep-result').innerHTML=`<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots" style="justify-content:center"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Building your strategy...</p></div>`;
-  const mp=profiles[mn]||profiles[Object.keys(profiles).find(k=>k.toLowerCase()===mn.toLowerCase())];
-  const tp=profiles[tn]||profiles[Object.keys(profiles).find(k=>k.toLowerCase()===tn.toLowerCase())];
-  const mc=mp?`${mp.preferred||mp.name}: E${mp.enneagram?.n||'?'} ${mp.enneagram?.name||''}. Prefers ${mp.comm?.channel?.join(', ')||'?'}. Stress: ${mp.comm?.stress?.join(', ')||'?'}. After convos: ${mp.conflict?.after?.join(', ')||'?'}.`:`${mn} has not completed an assessment.`;
-  const tpub=tp?`${tp.preferred||tp.name}: E${tp.enneagram?.n||'?'} (${tp.enneagram?.name||'?'}) — ${tp.enneagram?.core||''}.`:`${tn} has not completed an assessment.`;
-  const tpriv=tp?`(Strategy only): Prefers ${tp.comm?.channel?.join(', ')}. Respected when ${tp.comm?.respect?.join(', ')}. Feedback: ${tp.comm?.feedback?.join(', ')}. Conflict: ${tp.conflict?.instinct?.join(', ')}. Safe: ${tp.conflict?.safety?.join(', ')}.`:'';
-  try{
-    const r=await claude(`Trauma-informed, harm reduction consultant for JOLT Foundation. Help ${mn} prepare for a conversation with ${tn} about: "${topic}". Goal: "${goal}". About ${mn}: ${mc} About ${tn} (public): ${tpub} ${tpriv} Write: 1. What to keep in mind about yourself (2-3 sentences) 2. What to keep in mind about ${tn} from Enneagram (2-3 sentences, no private details) 3. How to open (1-2 sentence starters) 4. What to avoid (2-3 things) 5. How to close toward goal (1-2 sentences). Trauma-informed, restorative lens.`);
-    document.getElementById('prep-result').innerHTML=`<div class="card card-accent"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span class="badge badge-red">${mn} &rarr; ${tn}</span>${tp?.enneagram?`<span class="badge badge-gray">Their type: E${tp.enneagram.n}</span>`:''}</div><div class="result-label">Your conversation strategy</div><div class="ai-response">${r}</div></div>`;
-  }catch(e){document.getElementById('prep-result').innerHTML=`<div class="alert alert-info">Something went wrong: ${e.message}</div>`;}
-}
-
-function checkAdminPw(){
-  if(document.getElementById('admin-pw-input').value==='JOLTAdm!n'){
-    document.getElementById('pw-error').style.display='none';
-    document.getElementById('admin-pw-input').value='';
-    showScreen('screen-admin');
-  }else{document.getElementById('pw-error').style.display='block';}
-}
-
-function adminTab(tab,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  ['overview','profiles','compare','team','newhire','settings'].forEach(t=>{
-    document.getElementById(`admin-tab-${t}`).style.display=t===tab?'':'none';
+ if(!EJS_PUBLIC_KEY||EJS_PUBLIC_KEY.indexOf('YOUR_')===0)return false;
+ try{
+  emailjs.init(EJS_PUBLIC_KEY);
+  await emailjs.send(EJS_SERVICE_ID,EJS_TEMPLATE_ID,{
+   to_email:ADMIN_EMAIL,
+   staff_name:data.preferred||data.name,
+   staff_role:data.role||'Not specified',
+   pronouns:data.pronouns||'not specified',
+   enneagram:data.enneagram?(data.enneagram.n+(data.wing||'')+' — '+data.enneagram.name):'Not specified',
+   submitted_at:new Date(data.timestamp).toLocaleString('en-US',{dateStyle:'full',timeStyle:'short'}),
+   comm_profile:data.ai_comm||'',learn_profile:data.ai_learn||'',recommendations:data.ai_rec||'',
+   activating:(data.conflict&&data.conflict.activating||[]).join(', ')||'None flagged',
+   strengths:(data.strengths||[]).join(', ')||'Not specified',
+   supervisor_needs:(data.needs||[]).join(', ')||'Not specified'
   });
-  if(tab==='settings')loadEjsIntoForm();
-}
-
-function isDue(ts){return Date.now()-new Date(ts).getTime()>1000*60*60*24*365;}
-
-function refreshAdmin(){
-  const ps=Object.values(profiles);
-  const count=ps.length;
-  const ec={};let due=0;
-  ps.forEach(p=>{if(p.enneagram){const k=`Type ${p.enneagram.n}`;ec[k]=(ec[k]||0)+1;}if(isDue(p.timestamp))due++;});
-  const top=Object.entries(ec).sort((a,b)=>b[1]-a[1])[0];
-  document.getElementById('admin-metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Profiles</div><div class="metric-val">${count}</div></div>
-    <div class="metric"><div class="metric-label">Most common type</div><div class="metric-val">${top?top[0]:'—'}</div></div>
-    <div class="metric"><div class="metric-label">Due for update</div><div class="metric-val" style="${due>0?'color:#f59e0b':''}">${due}</div></div>`;
-  document.getElementById('admin-snapshot').innerHTML=count===0
-    ?`<p style="color:var(--text-muted);font-size:13px">No assessments yet. Share the tool with your team to get started.</p>`
-    :ps.map(p=>{const d=isDue(p.timestamp);const dn=p.preferred||p.name;return`<div class="profile-row"><div style="display:flex;align-items:center;gap:8px;flex:1"><div class="staff-avatar" style="width:30px;height:30px;font-size:11px;flex-shrink:0">${dn.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()}</div><div><div style="font-size:13px;font-weight:600">${dn}</div><div style="font-size:11px;color:var(--text-muted)">${p.role||'JOLT Staff'}${p.pronouns&&p.pronouns!=='not specified'?' · '+p.pronouns:''}</div></div></div><span class="badge badge-red" style="font-size:11px">${p.enneagram?'E'+p.enneagram.n+(p.wing||''):'?'}</span><span class="badge ${d?'badge-amber':'badge-green'}" style="font-size:11px;margin-left:4px">${d?'Update due':'Current'}</span></div>`;}).join('');
-  document.getElementById('admin-staff-grid').innerHTML=count===0?`<p style="color:var(--text-muted);font-size:13px">No profiles yet.</p>`:ps.map(p=>{const d=isDue(p.timestamp);const dn=p.preferred||p.name;return`<div class="staff-card" onclick="showAdminProfile('${p.name}')"><div class="staff-avatar">${dn.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()}</div><div class="staff-name">${dn}</div><div class="staff-role">${p.role||'JOLT Staff'}</div>${p.enneagram?`<div style="margin-top:6px"><span class="badge badge-red" style="font-size:11px">E${p.enneagram.n}${p.wing||''}</span></div>`:''}${d?`<div style="margin-top:4px"><span class="badge badge-amber" style="font-size:11px">Update due</span></div>`:''}</div>`;}).join('');
-  const opts=ps.map(p=>`<option value="${p.name}">${p.preferred||p.name}</option>`).join('');
-  document.getElementById('compare-a').innerHTML=`<option value="">Select...</option>${opts}`;
-  document.getElementById('compare-b').innerHTML=`<option value="">Select...</option>${opts}`;
-}
-
-function showAdminProfile(name){
-  const p=profiles[name];if(!p)return;
-  const ei=p.enneagram?ENN.find(e=>e.n===p.enneagram.n):null;
-  const d=isDue(p.timestamp);const dn=p.preferred||p.name;
-  const notes=p.notes||[];
-  document.getElementById('admin-profile-detail').innerHTML=`
-    <div class="card card-accent">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
-        <span style="font-size:15px;font-weight:700">${dn}</span>
-        ${p.pronouns&&p.pronouns!=='not specified'?`<span class="badge badge-blue">${p.pronouns}</span>`:''}
-        <span class="badge badge-red">${p.enneagram?'E'+p.enneagram.n+(p.wing||''):'TBD'}</span>
-        <span class="badge badge-gray">${p.role||'Staff'}</span>
-        <span class="badge ${d?'badge-amber':'badge-green'}">${d?'Update due':'Current'}</span>
-      </div>
-      ${ei?`<div class="card" style="margin-bottom:.75rem;padding:.75rem;background:var(--light-gray)"><strong>${ei.name}</strong> — ${ei.core}</div>`:''}
-      ${p.conflict?.activating?.length>0?`<div class="alert alert-warn" style="margin-bottom:.75rem"><strong>Activating contexts flagged:</strong> ${p.conflict.activating.join(', ')}</div>`:''}
-      <div class="result-label">Communication profile</div><div class="ai-response" style="margin-bottom:1rem">${p.ai_comm||'—'}</div>
-      <div class="result-label">Learning style</div><div class="ai-response" style="margin-bottom:1rem">${p.ai_learn||'—'}</div>
-      <div class="result-label">Supervisor recommendations</div><div class="ai-response" style="margin-bottom:1rem">${p.ai_rec||'—'}</div>
-      <div class="divider"></div>
-      <div class="result-label">Raw data</div>
-      <div style="font-size:13px;display:grid;gap:4px;margin-bottom:1rem">
-        <div><span style="color:var(--text-muted)">Strengths: </span>${(p.strengths||[]).join(', ')||'—'}</div>
-        <div><span style="color:var(--text-muted)">Needs: </span>${(p.needs||[]).join(', ')||'—'}</div>
-        <div><span style="color:var(--text-muted)">Conflict instinct: </span>${(p.conflict?.instinct||[]).join(', ')||'—'}</div>
-        <div><span style="color:var(--text-muted)">Feels safe when: </span>${(p.conflict?.safety||[]).join(', ')||'—'}</div>
-        <div><span style="color:var(--text-muted)">After hard convos: </span>${(p.conflict?.after||[]).join(', ')||'—'}</div>
-        ${p.conflict?.context?`<div><span style="color:var(--text-muted)">Context shared: </span>${p.conflict.context}</div>`:''}
-      </div>
-      <div class="divider"></div>
-      <div class="result-label" style="margin-bottom:.75rem">Supervisor notes</div>
-      <div id="notes-${name.replace(/\s/g,'_')}" style="margin-bottom:.75rem">${notes.length===0?`<p style="font-size:13px;color:var(--text-muted)">No notes yet.</p>`:notes.map(n=>`<div class="note-entry"><div class="note-meta">${n.author} &middot; ${n.date}</div><div class="note-text">${n.text}</div></div>`).join('')}</div>
-      <label>Add a supervisor note</label>
-      <input type="text" id="na-${name.replace(/\s/g,'_')}" placeholder="Your name" style="margin-bottom:8px">
-      <textarea id="nt-${name.replace(/\s/g,'_')}" placeholder="Observation, pattern, accommodation, follow-up..." style="min-height:60px;margin-bottom:8px"></textarea>
-      <button class="btn btn-primary btn-sm" onclick="addNote('${name}')">+ Add note</button>
-    </div>`;
-}
-
-function addNote(name){
-  const key=name.replace(/\s/g,'_');
-  const author=document.getElementById(`na-${key}`).value.trim();
-  const text=document.getElementById(`nt-${key}`).value.trim();
-  if(!author||!text){alert('Please enter your name and a note.');return;}
-  if(!profiles[name].notes)profiles[name].notes=[];
-  profiles[name].notes.push({author,text,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
-  document.getElementById(`nt-${key}`).value='';
-  document.getElementById(`notes-${key}`).innerHTML=profiles[name].notes.map(n=>`<div class="note-entry"><div class="note-meta">${n.author} &middot; ${n.date}</div><div class="note-text">${n.text}</div></div>`).join('');
-}
-
-async function runCompare(){
-  const na=document.getElementById('compare-a').value;const nb=document.getElementById('compare-b').value;
-  if(!na||!nb||na===nb){alert('Please select two different staff members.');return;}
-  document.getElementById('compare-result').innerHTML=`<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots" style="justify-content:center"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Generating comparison...</p></div>`;
-  const pA=profiles[na],pB=profiles[nb];
-  if(!pA||!pB){document.getElementById('compare-result').innerHTML=`<div class="alert alert-info">One or both profiles not found.</div>`;return;}
-  const dA=pA.preferred||pA.name,dB=pB.preferred||pB.name;
-  try{
-    const r=await claude(`Trauma-informed, harm reduction consultant for JOLT Foundation. Admin comparison.\n${dA} (${pA.pronouns||'?'}): E${pA.enneagram?.n||'?'} ${pA.enneagram?.name||''}. Comm: ${pA.comm?.channel?.join(', ')||'?'}. Stress: ${pA.comm?.stress?.join(', ')||'?'}. Strengths: ${pA.strengths?.join(', ')||'?'}.\n${dB} (${pB.pronouns||'?'}): E${pB.enneagram?.n||'?'} ${pB.enneagram?.name||''}. Comm: ${pB.comm?.channel?.join(', ')||'?'}. Stress: ${pB.comm?.stress?.join(', ')||'?'}. Strengths: ${pB.strengths?.join(', ')||'?'}.\nWrite: 1. Where they'll naturally connect (2-3 sentences) 2. Friction points (2-3 sentences) 3. How to communicate with each differently (1-2 sentences each, correct pronouns) 4. Supervisor facilitation if conflict (3-4 sentences) 5. Training accommodations for each (1-2 sentences each). Trauma-informed, strengths-based.`);
-    document.getElementById('compare-result').innerHTML=`<div class="compare-panel"><div class="compare-card"><div class="staff-avatar" style="margin-bottom:.5rem">${dA.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()}</div><div class="staff-name">${dA}</div><div class="staff-role">${pA.role||'JOLT Staff'}</div>${pA.pronouns&&pA.pronouns!=='not specified'?`<div style="font-size:11px;color:var(--text-muted);margin-top:2px">${pA.pronouns}</div>`:''}</div><div class="compare-card"><div class="staff-avatar" style="margin-bottom:.5rem">${dB.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()}</div><div class="staff-name">${dB}</div><div class="staff-role">${pB.role||'JOLT Staff'}</div>${pB.pronouns&&pB.pronouns!=='not specified'?`<div style="font-size:11px;color:var(--text-muted);margin-top:2px">${pB.pronouns}</div>`:''}</div></div><div class="card card-accent"><div class="result-label">Comparison and strategy</div><div class="ai-response">${r}</div></div>`;
-  }catch(e){document.getElementById('compare-result').innerHTML=`<div class="alert alert-info">Error: ${e.message}</div>`;}
-}
-
-async function runTeamDynamics(){
-  const ps=Object.values(profiles);
-  if(ps.length<4){document.getElementById('team-dynamics-result').innerHTML=`<div class="alert alert-warn">At least 4 profiles needed. Currently ${ps.length} submitted.</div>`;return;}
-  document.getElementById('team-dynamics-result').innerHTML=`<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots" style="justify-content:center"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Analyzing team dynamics...</p></div>`;
-  const sum=ps.map(p=>`${p.preferred||p.name} (${p.pronouns||'?'}, E${p.enneagram?.n||'?'} ${p.enneagram?.name||''}): strengths ${(p.strengths||[]).join(', ')||'?'}, stress ${p.comm?.stress?.join(', ')||'?'}, activating ${(p.conflict?.activating||[]).join(', ')||'none'}`).join('\n');
-  try{
-    const r=await claude(`Trauma-informed, harm reduction consultant for JOLT Foundation. Team dynamics overview for ${ps.length} staff.\n${sum}\nWrite: 1. Team communication strengths (3-4 sentences) 2. Collective friction risks (3-4 sentences) 3. Trauma-informed considerations across team (2-3 sentences, no individual attribution) 4. Training recommendations (3-4 sentences) 5. Three specific leadership recommendations for Chris and supervisors. Equity-conscious, strengths-based, general language.`);
-    document.getElementById('team-dynamics-result').innerHTML=`<div class="card card-accent"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span class="badge badge-red">Team snapshot</span><span class="badge badge-gray">${ps.length} profiles &middot; ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span></div><div class="result-label">Team dynamics overview</div><div class="ai-response">${r}</div></div>`;
-  }catch(e){document.getElementById('team-dynamics-result').innerHTML=`<div class="alert alert-info">Error: ${e.message}</div>`;}
-}
-
-async function runNewHireReport(){
-  const nn=document.getElementById('newhire-name').value.trim();const nr=document.getElementById('newhire-role').value.trim();
-  if(!nn||!nr){alert('Please enter the new hire\'s name and role.');return;}
-  const ps=Object.values(profiles);
-  if(ps.length===0){document.getElementById('newhire-result').innerHTML=`<div class="alert alert-warn">No staff profiles yet.</div>`;return;}
-  document.getElementById('newhire-result').innerHTML=`<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots" style="justify-content:center"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Building new hire brief...</p></div>`;
-  const ts=ps.map(p=>`${p.preferred||p.name} (${p.pronouns||'?'}, ${p.role||'Staff'}, E${p.enneagram?.n||'?'}): prefers ${p.comm?.channel?.join(', ')||'?'}, respected when ${p.comm?.respect?.join(', ')||'?'}, feedback ${p.comm?.feedback?.join(', ')||'?'}, strengths ${(p.strengths||[]).join(', ')||'?'}`).join('\n');
-  try{
-    const r=await claude(`Trauma-informed, harm reduction consultant for JOLT Foundation. New hire communication brief for ${nn}, joining as ${nr}.\nTeam:\n${ts}\nWrite: 1. Welcome framing — JOLT's communication culture (2 sentences) 2. Meet your team — for each team member, 1-2 sentences on how to approach them using their name and pronouns, communication preferences, what makes them feel respected. No private assessment details. 3. Team-wide patterns (2-3 sentences) 4. Tips for first 30 days — 3 practical tips. Warm, direct, harm reduction lens. Correct pronouns throughout.`);
-    document.getElementById('newhire-result').innerHTML=`<div class="card card-accent"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span class="badge badge-red">New hire brief</span><span class="badge badge-gray">${nn} &middot; ${nr}</span><span class="badge badge-gray">${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</span></div><div class="result-label">Communication brief for ${nn}</div><div class="ai-response">${r}</div></div>`;
-  }catch(e){document.getElementById('newhire-result').innerHTML=`<div class="alert alert-info">Error: ${e.message}</div>`;}
-}
-
-function loadEjsCfg(){try{const s=localStorage.getItem('ejs_config');return s?JSON.parse(s):null;}catch(e){return null;}}
-
-function loadEjsIntoForm(){
-  const cfg=loadEjsCfg();
-  if(cfg){
-    document.getElementById('ejs-pubkey-settings').value=cfg.pubkey||'';
-    document.getElementById('ejs-service-settings').value=cfg.service||'';
-    document.getElementById('ejs-template-settings').value=cfg.template||'';
-    document.getElementById('email-settings-status').innerHTML=`<div class="alert alert-success" style="margin-bottom:.5rem">&#10003; Email notifications active via Outlook/Microsoft 365.</div>`;
-  }else{
-    document.getElementById('email-settings-status').innerHTML=`<div class="alert alert-warn" style="margin-bottom:.5rem">Email notifications not yet configured.</div>`;
-  }
-}
-
-function saveEmailConfigFromSettings(){
-  const pk=document.getElementById('ejs-pubkey-settings').value.trim();
-  const svc=document.getElementById('ejs-service-settings').value.trim();
-  const tmpl=document.getElementById('ejs-template-settings').value.trim();
-  if(!pk||!svc||!tmpl){document.getElementById('settings-email-status').innerHTML='<span style="color:var(--red)">Please fill in all three fields.</span>';return;}
-  localStorage.setItem('ejs_config',JSON.stringify({pubkey:pk,service:svc,template:tmpl}));
-  document.getElementById('settings-email-status').innerHTML='<span style="color:#065f46">Saved. Email notifications are now active.</span>';
+  return true;
+ }catch(e){console.log('EmailJS:',e);return false}
 }
 
 async function testEmail(){
-  const cfg=loadEjsCfg();
-  if(!cfg?.pubkey){document.getElementById('settings-email-status').innerHTML='<span style="color:var(--red)">Save your config first.</span>';return;}
-  document.getElementById('settings-email-status').textContent='Sending test...';
-  try{
-    emailjs.init(cfg.pubkey);
-    await emailjs.send(cfg.service,cfg.template,{
-      to_email:ADMIN_EMAIL,staff_name:'Test Staff Member',staff_role:'Test Role',pronouns:'they/them',
-      enneagram:'8w7 — The Challenger',submitted_at:new Date().toLocaleString(),
-      comm_profile:'This is a test communication profile.',learn_profile:'This is a test learning profile.',
-      recommendations:'1. This is a test recommendation.',activating:'Raised voices, unexpected confrontation',
-      strengths:'Test strength',supervisor_needs:'Test need'
-    });
-    document.getElementById('settings-email-status').innerHTML='<span style="color:#065f46">Test sent to '+ADMIN_EMAIL+'. Check your inbox.</span>';
-  }catch(e){document.getElementById('settings-email-status').innerHTML=`<span style="color:var(--red)">Test failed: ${e.text||'Check credentials.'}</span>`;}
+ document.getElementById('st-msg').textContent='Sending test...';
+ const ok=await sendEmail({name:'Test Staff Member',preferred:'Test Staff Member',role:'Test Role',pronouns:'they/them',
+  enneagram:{n:8,name:'The Challenger'},wing:'w7',timestamp:new Date().toISOString(),
+  ai_comm:'This is a test communication profile.',ai_learn:'This is a test learning profile.',ai_rec:'1. This is a test recommendation.',
+  conflict:{activating:['Test context']},strengths:['Test strength'],needs:['Test need']});
+ document.getElementById('st-msg').innerHTML=ok
+  ?'<span style="color:#065f46">Test sent to '+ADMIN_EMAIL+'. Check the inbox.</span>'
+  :'<span style="color:var(--red)">Test failed — check EmailJS credentials in the code.</span>';
 }
 
-initEnnGrid();
+function lookupProfile(){
+ const name=document.getElementById('f-lookup').value.trim();
+ if(!name)return;
+ const p=findProfile(name);
+ if(!p){document.getElementById('lookup-out').innerHTML='<div class="alert ai"><svg class="icon-sm"><use href="#i-search"/></svg><span>No profile found for "'+name+'" in this browser. Have you completed the assessment on this device?</span></div>';return}
+ const ei=p.enneagram?ENN.find(e=>e.n===p.enneagram.n):null;
+ const dn=p.preferred||p.name;
+ document.getElementById('lookup-out').innerHTML=
+  '<div class="card card-accent">'+
+  '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem">'+
+  '<span class="badge br">'+(p.enneagram?'Enneagram '+p.enneagram.n+(p.wing||''):'Enneagram TBD')+'</span>'+
+  (p.pronouns&&p.pronouns!=='not specified'?'<span class="badge bb">'+p.pronouns+'</span>':'')+
+  '<span class="badge bg">'+(p.role||'JOLT Staff')+'</span>'+
+  '<span class="badge bg">'+new Date(p.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</span></div>'+
+  (ei?'<p style="font-size:13px;margin-bottom:1rem"><strong>'+ei.name+'</strong> — '+ei.core+'</p>':'')+
+  '<div class="rl"><svg class="icon-sm"><use href="#i-chat"/></svg>Your communication profile</div><div class="at" style="margin-bottom:1rem">'+clean(p.ai_comm)+'</div>'+
+  '<div class="rl"><svg class="icon-sm"><use href="#i-book"/></svg>Your learning style</div><div class="at" style="margin-bottom:1rem">'+clean(p.ai_learn)+'</div>'+
+  '<div class="rl"><svg class="icon-sm"><use href="#i-users"/></svg>Recommendations for your team</div><div class="at">'+clean(p.ai_rec)+'</div></div>'+
+  '<button class="btn btn-primary" onclick="retake(\''+p.name.replace(/'/g,"\\'")+'\')"><svg class="icon"><use href="#i-refresh"/></svg> Update my profile</button>';
+}
+
+function retake(name){
+ const p=findProfile(name);if(!p)return;
+ document.getElementById('f-name').value=p.name;
+ document.getElementById('f-pref').value=p.preferred||'';
+ document.getElementById('f-role').value=p.role||'';
+ document.getElementById('f-email').value=p.email||'';
+ go('s-enn');initEnn();
+}
+
+async function runConvoPrep(){
+ const mn=document.getElementById('p-my').value.trim();
+ const tn=document.getElementById('p-their').value.trim();
+ const topic=document.getElementById('p-topic').value.trim();
+ const goal=document.getElementById('p-goal').value.trim();
+ if(!mn||!tn||!topic){alert('Please fill in your name, their name, and the topic.');return}
+ document.getElementById('prep-out').innerHTML='<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Building your strategy...</p></div>';
+ const mp=findProfile(mn),tp=findProfile(tn);
+ const mc=mp?((mp.preferred||mp.name)+': Enneagram '+(mp.enneagram?mp.enneagram.n+' '+mp.enneagram.name:'unknown')+'. Prefers '+(mp.comm&&mp.comm.channel||[]).join(', ')+'. Under stress: '+(mp.comm&&mp.comm.stress||[]).join(', ')+'. After hard conversations: '+(mp.conflict&&mp.conflict.after||[]).join(', ')+'.'):(mn+' has not completed an assessment on this device.');
+ const tpub=tp?((tp.preferred||tp.name)+': Enneagram '+(tp.enneagram?tp.enneagram.n+' ('+tp.enneagram.name+') — '+tp.enneagram.core:'unknown')+'.'):(tn+' has not completed an assessment on this device.');
+ const tpriv=tp?('(For strategy use only, never reveal these details): Prefers '+(tp.comm&&tp.comm.channel||[]).join(', ')+'. Feels respected when '+(tp.comm&&tp.comm.respect||[]).join(', ')+'. Feedback: '+(tp.comm&&tp.comm.feedback||[]).join(', ')+'. Conflict instinct: '+(tp.conflict&&tp.conflict.instinct||[]).join(', ')+'. Feels safe when: '+(tp.conflict&&tp.conflict.safety||[]).join(', ')+'. Activating contexts: '+((tp.conflict&&tp.conflict.activating||[]).join(', ')||'none flagged')+'.'):'';
+ try{
+  const r=await claude('You are a trauma-informed communication consultant for JOLT Foundation. Help '+mn+' prepare for a conversation with '+tn+' about: "'+topic+'". Goal: "'+goal+'". About '+mn+': '+mc+' About '+tn+' (public): '+tpub+' '+tpriv+' Write 5 numbered sections: 1. What to keep in mind about yourself going in (2-3 sentences) 2. What to keep in mind about '+tn+' based on their Enneagram type only, no private details (2-3 sentences) 3. How to open the conversation (1-2 specific sentence starters in quotes) 4. What to avoid (2-3 things) 5. How to close toward the goal (1-2 sentences). Trauma-informed, restorative lens. Warm but direct.');
+  document.getElementById('prep-out').innerHTML='<div class="card card-accent"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span class="badge br">'+mn+' &rarr; '+tn+'</span>'+(tp&&tp.enneagram?'<span class="badge bg">Their type: Enneagram '+tp.enneagram.n+'</span>':'')+'</div><div class="rl"><svg class="icon-sm"><use href="#i-chat"/></svg>Your conversation strategy</div><div class="at">'+r+'</div></div>';
+ }catch(e){document.getElementById('prep-out').innerHTML='<div class="alert ai"><span>Something went wrong: '+e.message+'</span></div>'}
+}
+
+function chkpw(){
+ if(document.getElementById('f-pw').value===ADMIN_PASSWORD){
+  document.getElementById('pw-err').style.display='none';
+  document.getElementById('f-pw').value='';
+  go('s-admin');
+ }else{document.getElementById('pw-err').style.display='block'}
+}
+
+function atab(tab,el){
+ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+ ['ov','pf','co','td','nh','st'].forEach(t=>{document.getElementById('at-'+t).style.display=t===tab?'':'none'});
+}
+
+function isDue(ts){return Date.now()-new Date(ts).getTime()>1000*60*60*24*365}
+
+function refreshAdmin(){
+ const ps=Object.values(loadProfiles());
+ const count=ps.length;
+ const ec={};let due=0;
+ ps.forEach(p=>{if(p.enneagram){const k='Type '+p.enneagram.n;ec[k]=(ec[k]||0)+1}if(isDue(p.timestamp))due++});
+ const top=Object.entries(ec).sort((a,b)=>b[1]-a[1])[0];
+ document.getElementById('a-metrics').innerHTML=
+  '<div class="mc"><span class="icon-circle"><svg class="icon"><use href="#i-users"/></svg></span><div><div class="ml">Profiles</div><div class="mv">'+count+'</div></div></div>'+
+  '<div class="mc"><span class="icon-circle"><svg class="icon"><use href="#i-grid"/></svg></span><div><div class="ml">Top type</div><div class="mv" style="font-size:16px">'+(top?top[0]:'—')+'</div></div></div>'+
+  '<div class="mc"><span class="icon-circle"><svg class="icon"><use href="#i-refresh"/></svg></span><div><div class="ml">Due for update</div><div class="mv"'+(due>0?' style="color:#f59e0b"':'')+'>'+due+'</div></div></div>';
+ document.getElementById('a-roster').innerHTML=count===0
+  ?'<p style="color:var(--muted);font-size:13px">No assessments in this browser yet. Assessment results are also emailed to '+ADMIN_EMAIL+'.</p>'
+  :ps.map(p=>{const d=isDue(p.timestamp);const dn=p.preferred||p.name;
+   return '<div class="pr"><div style="display:flex;align-items:center;gap:8px;flex:1"><div class="av" style="width:30px;height:30px;font-size:11px;flex-shrink:0">'+dn.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div><div style="font-size:13px;font-weight:600">'+dn+'</div><div style="font-size:11px;color:var(--muted)">'+(p.role||'JOLT Staff')+(p.pronouns&&p.pronouns!=='not specified'?' · '+p.pronouns:'')+'</div></div></div><span class="badge br" style="font-size:11px">'+(p.enneagram?'E'+p.enneagram.n+(p.wing||''):'?')+'</span><span class="badge '+(d?'bam':'bgn')+'" style="font-size:11px;margin-left:4px">'+(d?'Update due':'Current')+'</span></div>'}).join('');
+ document.getElementById('a-grid').innerHTML=count===0
+  ?'<p style="color:var(--muted);font-size:13px">No profiles in this browser yet.</p>'
+  :ps.map(p=>{const d=isDue(p.timestamp);const dn=p.preferred||p.name;
+   return '<div class="sc" onclick="showAdminProfile(\''+p.name.replace(/'/g,"\\'")+'\')">'+(d?'<div class="due-flag"></div>':'')+'<div class="av">'+dn.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div class="sn">'+dn+'</div><div class="sr">'+(p.role||'JOLT Staff')+'</div>'+(p.enneagram?'<div style="margin-top:6px"><span class="badge br" style="font-size:11px">E'+p.enneagram.n+(p.wing||'')+'</span></div>':'')+(d?'<div style="margin-top:4px"><span class="badge bam" style="font-size:11px">Update due</span></div>':'')+'</div>'}).join('');
+ const opts=ps.map(p=>'<option value="'+p.name+'">'+(p.preferred||p.name)+'</option>').join('');
+ document.getElementById('c-a').innerHTML='<option value="">Select...</option>'+opts;
+ document.getElementById('c-b').innerHTML='<option value="">Select...</option>'+opts;
+}
+
+function showAdminProfile(name){
+ const p=findProfile(name);if(!p)return;
+ const ei=p.enneagram?ENN.find(e=>e.n===p.enneagram.n):null;
+ const d=isDue(p.timestamp);const dn=p.preferred||p.name;
+ const notes=p.notes||[];
+ const key=name.replace(/[^a-zA-Z0-9]/g,'_');
+ document.getElementById('a-detail').innerHTML=
+  '<div class="card card-accent">'+
+  '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span style="font-size:15px;font-weight:700">'+dn+'</span>'+
+  (p.pronouns&&p.pronouns!=='not specified'?'<span class="badge bb">'+p.pronouns+'</span>':'')+
+  '<span class="badge br">'+(p.enneagram?'E'+p.enneagram.n+(p.wing||''):'TBD')+'</span>'+
+  '<span class="badge bg">'+(p.role||'Staff')+'</span>'+
+  '<span class="badge '+(d?'bam':'bgn')+'">'+(d?'Update due':'Current')+'</span>'+
+  '<span class="badge bg">'+new Date(p.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</span></div>'+
+  (ei?'<div class="card" style="margin-bottom:.75rem;padding:.75rem;background:var(--surface)"><strong>'+ei.name+'</strong> — '+ei.core+'</div>':'')+
+  (p.conflict&&p.conflict.activating&&p.conflict.activating.length>0?'<div class="alert aw"><svg class="icon-sm"><use href="#i-shield"/></svg><span><strong>Activating contexts flagged:</strong> '+p.conflict.activating.join(', ')+'</span></div>':'')+
+  '<div class="rl"><svg class="icon-sm"><use href="#i-chat"/></svg>Communication profile</div><div class="at" style="margin-bottom:1rem">'+clean(p.ai_comm)+'</div>'+
+  '<div class="rl"><svg class="icon-sm"><use href="#i-book"/></svg>Learning style</div><div class="at" style="margin-bottom:1rem">'+clean(p.ai_learn)+'</div>'+
+  '<div class="rl"><svg class="icon-sm"><use href="#i-users"/></svg>Supervisor recommendations</div><div class="at" style="margin-bottom:1rem">'+clean(p.ai_rec)+'</div>'+
+  '<div class="div"></div><div class="rl">Raw data</div>'+
+  '<div style="font-size:13px;display:grid;gap:4px;margin-bottom:1rem">'+
+  '<div><span style="color:var(--muted)">Strengths: </span>'+((p.strengths||[]).join(', ')||'—')+'</div>'+
+  '<div><span style="color:var(--muted)">Needs: </span>'+((p.needs||[]).join(', ')||'—')+'</div>'+
+  '<div><span style="color:var(--muted)">Conflict instinct: </span>'+((p.conflict&&p.conflict.instinct||[]).join(', ')||'—')+'</div>'+
+  '<div><span style="color:var(--muted)">Feels safe when: </span>'+((p.conflict&&p.conflict.safety||[]).join(', ')||'—')+'</div>'+
+  '<div><span style="color:var(--muted)">After hard convos: </span>'+((p.conflict&&p.conflict.after||[]).join(', ')||'—')+'</div>'+
+  (p.conflict&&p.conflict.context?'<div><span style="color:var(--muted)">Context shared: </span>'+p.conflict.context+'</div>':'')+
+  (p.extra?'<div><span style="color:var(--muted)">Additional notes: </span>'+p.extra+'</div>':'')+'</div>'+
+  '<div class="div"></div><div class="rl" style="margin-bottom:.75rem">Supervisor notes</div>'+
+  '<div id="nlist-'+key+'" style="margin-bottom:.75rem">'+(notes.length===0?'<p style="font-size:13px;color:var(--muted)">No notes yet.</p>':notes.map(n=>'<div class="ne"><div class="nm">'+n.author+' · '+n.date+'</div><div class="nt">'+n.text+'</div></div>').join(''))+'</div>'+
+  '<label for="na-'+key+'">Add a supervisor note</label>'+
+  '<input type="text" id="na-'+key+'" placeholder="Your name" style="margin-bottom:8px">'+
+  '<textarea id="nt-'+key+'" placeholder="Observation, pattern, accommodation, follow-up..." style="min-height:60px;margin-bottom:8px"></textarea>'+
+  '<button class="btn btn-primary btn-sm" onclick="addNote(\''+name.replace(/'/g,"\\'")+'\')"><svg class="icon"><use href="#i-plus"/></svg> Add note</button></div>';
+}
+
+function addNote(name){
+ const key=name.replace(/[^a-zA-Z0-9]/g,'_');
+ const author=document.getElementById('na-'+key).value.trim();
+ const text=document.getElementById('nt-'+key).value.trim();
+ if(!author||!text){alert('Please enter your name and a note.');return}
+ const ps=loadProfiles();
+ const k=Object.keys(ps).find(k=>k.toLowerCase()===name.toLowerCase());
+ if(!k)return;
+ if(!ps[k].notes)ps[k].notes=[];
+ ps[k].notes.push({author,text,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+ saveProfiles(ps);
+ document.getElementById('nt-'+key).value='';
+ document.getElementById('nlist-'+key).innerHTML=ps[k].notes.map(n=>'<div class="ne"><div class="nm">'+n.author+' · '+n.date+'</div><div class="nt">'+n.text+'</div></div>').join('');
+}
+
+async function runCompare(){
+ const na=document.getElementById('c-a').value,nb=document.getElementById('c-b').value;
+ if(!na||!nb||na===nb){alert('Please select two different staff members.');return}
+ document.getElementById('co-out').innerHTML='<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Generating comparison...</p></div>';
+ const pA=findProfile(na),pB=findProfile(nb);
+ if(!pA||!pB){document.getElementById('co-out').innerHTML='<div class="alert ai"><span>One or both profiles not found.</span></div>';return}
+ const dA=pA.preferred||pA.name,dB=pB.preferred||pB.name;
+ try{
+  const r=await claude('You are a trauma-informed organizational consultant for JOLT Foundation. Admin-level comparison of two staff members for supervisory use. '+dA+' ('+(pA.pronouns||'?')+'): Enneagram '+(pA.enneagram?pA.enneagram.n+' '+pA.enneagram.name:'?')+'. Communication: '+(pA.comm&&pA.comm.channel||[]).join(', ')+'. Under stress: '+(pA.comm&&pA.comm.stress||[]).join(', ')+'. Feedback: '+(pA.comm&&pA.comm.feedback||[]).join(', ')+'. Strengths: '+(pA.strengths||[]).join(', ')+'. Needs: '+(pA.needs||[]).join(', ')+'. Activating: '+((pA.conflict&&pA.conflict.activating||[]).join(', ')||'none')+'. '+dB+' ('+(pB.pronouns||'?')+'): Enneagram '+(pB.enneagram?pB.enneagram.n+' '+pB.enneagram.name:'?')+'. Communication: '+(pB.comm&&pB.comm.channel||[]).join(', ')+'. Under stress: '+(pB.comm&&pB.comm.stress||[]).join(', ')+'. Feedback: '+(pB.comm&&pB.comm.feedback||[]).join(', ')+'. Strengths: '+(pB.strengths||[]).join(', ')+'. Needs: '+(pB.needs||[]).join(', ')+'. Activating: '+((pB.conflict&&pB.conflict.activating||[]).join(', ')||'none')+'. Write 5 numbered sections: 1. Where they will naturally connect (2-3 sentences) 2. Potential friction points (2-3 sentences) 3. How to communicate with each differently, using correct pronouns (1-2 sentences each) 4. Supervisor facilitation recommendations if they need to work through conflict (3-4 sentences) 5. Training accommodations for each when delivering the same content (1-2 sentences each). Trauma-informed, strengths-based.');
+  document.getElementById('co-out').innerHTML='<div class="cp"><div class="cc"><div class="av" style="margin-bottom:.5rem">'+dA.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div class="sn">'+dA+'</div><div class="sr">'+(pA.role||'JOLT Staff')+'</div>'+(pA.enneagram?'<span class="badge br" style="margin-top:6px;font-size:11px">E'+pA.enneagram.n+(pA.wing||'')+'</span>':'')+'</div><div class="cc"><div class="av" style="margin-bottom:.5rem">'+dB.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div class="sn">'+dB+'</div><div class="sr">'+(pB.role||'JOLT Staff')+'</div>'+(pB.enneagram?'<span class="badge br" style="margin-top:6px;font-size:11px">E'+pB.enneagram.n+(pB.wing||'')+'</span>':'')+'</div></div><div class="card card-accent"><div class="rl"><svg class="icon-sm"><use href="#i-compare"/></svg>Comparison and strategy</div><div class="at">'+r+'</div></div>';
+ }catch(e){document.getElementById('co-out').innerHTML='<div class="alert ai"><span>Error: '+e.message+'</span></div>'}
+}
+
+async function runTeamDynamics(){
+ const ps=Object.values(loadProfiles());
+ if(ps.length<4){document.getElementById('td-out').innerHTML='<div class="alert aw"><span>At least 4 profiles are needed for a team snapshot. Currently '+ps.length+' in this browser.</span></div>';return}
+ document.getElementById('td-out').innerHTML='<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Analyzing team dynamics...</p></div>';
+ const sum=ps.map(p=>(p.preferred||p.name)+' ('+(p.pronouns||'?')+', E'+(p.enneagram?p.enneagram.n+' '+p.enneagram.name:'?')+'): strengths '+((p.strengths||[]).join(', ')||'?')+', stress response '+((p.comm&&p.comm.stress||[]).join(', ')||'?')+', activating contexts '+((p.conflict&&p.conflict.activating||[]).join(', ')||'none')).join('. ');
+ try{
+  const r=await claude('You are a trauma-informed organizational consultant for JOLT Foundation in Peoria, IL. Based on this team of '+ps.length+' staff members, write an admin-level team dynamics overview. Team: '+sum+'. Write 5 numbered sections: 1. Team communication strengths (3-4 sentences) 2. Collective friction risks (3-4 sentences) 3. Trauma-informed considerations across the team, no individual attribution (2-3 sentences) 4. Training recommendations for this group (3-4 sentences) 5. Three specific leadership recommendations. Use plural, general language. Never single out individuals in sections 3-5.');
+  document.getElementById('td-out').innerHTML='<div class="card card-accent"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span class="badge br">Team snapshot</span><span class="badge bg">'+ps.length+' profiles · '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</span></div><div class="rl"><svg class="icon-sm"><use href="#i-grid"/></svg>Team dynamics overview</div><div class="at">'+r+'</div></div>';
+ }catch(e){document.getElementById('td-out').innerHTML='<div class="alert ai"><span>Error: '+e.message+'</span></div>'}
+}
+
+async function runNewHire(){
+ const nn=document.getElementById('nh-name').value.trim(),nr=document.getElementById('nh-role').value.trim();
+ if(!nn||!nr){alert("Please enter the new hire's name and role.");return}
+ const ps=Object.values(loadProfiles());
+ if(ps.length===0){document.getElementById('nh-out').innerHTML='<div class="alert aw"><span>No staff profiles in this browser yet.</span></div>';return}
+ document.getElementById('nh-out').innerHTML='<div class="card" style="text-align:center;padding:1.5rem"><div class="loading-dots"><span></span><span></span><span></span></div><p style="margin-top:.75rem">Building new hire brief...</p></div>';
+ const ts=ps.map(p=>(p.preferred||p.name)+' ('+(p.pronouns||'?')+', '+(p.role||'Staff')+', E'+(p.enneagram?p.enneagram.n:'?')+'): prefers '+((p.comm&&p.comm.channel||[]).join(', ')||'?')+', feels respected when '+((p.comm&&p.comm.respect||[]).join(', ')||'?')+', feedback style '+((p.comm&&p.comm.feedback||[]).join(', ')||'?')+', strengths '+((p.strengths||[]).join(', ')||'?')).join('. ');
+ try{
+  const r=await claude('You are a trauma-informed organizational consultant for JOLT Foundation in Peoria, IL. Write a new hire communication brief for '+nn+', joining JOLT as a '+nr+'. Their new team: '+ts+'. Write these sections: 1. A 2-sentence welcome about JOLT communication culture. 2. Meet your team — for each team member, 1-2 sentences on how to approach them using their name and pronouns, communication preferences, and what makes them feel respected. Do not reveal private assessment details or activating contexts. 3. Team-wide patterns (2-3 sentences). 4. Three practical tips for the first 30 days. Warm and direct.');
+  document.getElementById('nh-out').innerHTML='<div class="card card-accent"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span class="badge br">New hire brief</span><span class="badge bg">'+nn+' · '+nr+'</span><span class="badge bg">'+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</span></div><div class="rl"><svg class="icon-sm"><use href="#i-plus"/></svg>Communication brief for '+nn+'</div><div class="at">'+r+'</div></div>';
+ }catch(e){document.getElementById('nh-out').innerHTML='<div class="alert ai"><span>Error: '+e.message+'</span></div>'}
+}
+
+initEnn();
 </script>
 </body>
 </html>
