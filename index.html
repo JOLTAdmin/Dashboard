@@ -583,6 +583,14 @@ function findProfile(name){const ps=loadProfiles();const k=Object.keys(ps).find(
 // ── markdown stripper: cleans AI output for display & email ──
 function clean(t){return (t||'').replace(/^#{1,6}\s*/gm,'').replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').trim()}
 
+// ── chibi avatar: loads avatars/<firstname>.png from the repo, falls back to initials ──
+function avatar(dn,px,extra){
+ const fn=(dn||'').trim().split(' ')[0].toLowerCase().replace(/[^a-z0-9]/g,'');
+ const init=(dn||'?').split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+ const size=px||38;
+ return '<div class="av" style="width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*.36)+'px;overflow:hidden;'+(extra||'')+'"><img src="avatars/'+fn+'.png" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.textContent=\''+init+'\'"></div>';
+}
+
 function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='s-admin')refreshAdmin();window.scrollTo(0,0)}
 function so(btn){if(btn.classList.contains('sel')){btn.classList.remove('sel')}else if(btn.parentNode.querySelectorAll('.ob.sel').length<2){btn.classList.add('sel')}}
 function sm(btn,max){const sel=btn.parentNode.querySelectorAll('.ob.sel');if(btn.classList.contains('sel')){btn.classList.remove('sel')}else if(sel.length<max){btn.classList.add('sel')}}
@@ -698,6 +706,7 @@ function lookupProfile(){
  const dn=p.preferred||p.name;
  document.getElementById('lookup-out').innerHTML=
   '<div class="card card-accent">'+
+  '<div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">'+avatar(dn,48,'margin-bottom:0;flex-shrink:0')+'<div style="font-size:17px;font-weight:700">'+dn+'</div></div>'+
   '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem">'+
   '<span class="badge br">'+(p.enneagram?'<svg class="icon-sm"><use href="#i-e'+p.enneagram.n+'"/></svg>Enneagram '+p.enneagram.n+(p.wing||''):'Enneagram TBD')+'</span>'+
   (p.pronouns&&p.pronouns!=='not specified'?'<span class="badge bb">'+p.pronouns+'</span>':'')+
@@ -764,11 +773,11 @@ function refreshAdmin(){
  document.getElementById('a-roster').innerHTML=count===0
   ?'<p style="color:var(--muted);font-size:13px">No assessments in this browser yet. Assessment results are also emailed to '+ADMIN_EMAIL+'.</p>'
   :ps.map(p=>{const d=isDue(p.timestamp);const dn=p.preferred||p.name;
-   return '<div class="pr"><div style="display:flex;align-items:center;gap:8px;flex:1"><div class="av" style="width:30px;height:30px;font-size:11px;flex-shrink:0">'+dn.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div><div style="font-size:13px;font-weight:600">'+dn+'</div><div style="font-size:11px;color:var(--muted)">'+(p.role||'JOLT Staff')+(p.pronouns&&p.pronouns!=='not specified'?' · '+p.pronouns:'')+'</div></div></div><span class="badge br" style="font-size:11px">'+(p.enneagram?'E'+p.enneagram.n+(p.wing||''):'?')+'</span><span class="badge '+(d?'bam':'bgn')+'" style="font-size:11px;margin-left:4px">'+(d?'Update due':'Current')+'</span></div>'}).join('');
+   return '<div class="pr"><div style="display:flex;align-items:center;gap:8px;flex:1">'+avatar(dn,30,'flex-shrink:0;margin-bottom:0')+'<div><div style="font-size:13px;font-weight:600">'+dn+'</div><div style="font-size:11px;color:var(--muted)">'+(p.role||'JOLT Staff')+(p.pronouns&&p.pronouns!=='not specified'?' · '+p.pronouns:'')+'</div></div></div><span class="badge br" style="font-size:11px">'+(p.enneagram?'E'+p.enneagram.n+(p.wing||''):'?')+'</span><span class="badge '+(d?'bam':'bgn')+'" style="font-size:11px;margin-left:4px">'+(d?'Update due':'Current')+'</span></div>'}).join('');
  document.getElementById('a-grid').innerHTML=count===0
   ?'<p style="color:var(--muted);font-size:13px">No profiles in this browser yet.</p>'
   :ps.map(p=>{const d=isDue(p.timestamp);const dn=p.preferred||p.name;
-   return '<div class="sc" onclick="showAdminProfile(\''+p.name.replace(/'/g,"\\'")+'\')">'+(d?'<div class="due-flag"></div>':'')+'<div class="av">'+dn.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div class="sn">'+dn+'</div><div class="sr">'+(p.role||'JOLT Staff')+'</div>'+(p.enneagram?'<div style="margin-top:6px"><span class="badge br" style="font-size:11px">E'+p.enneagram.n+(p.wing||'')+'</span></div>':'')+(d?'<div style="margin-top:4px"><span class="badge bam" style="font-size:11px">Update due</span></div>':'')+'</div>'}).join('');
+   return '<div class="sc" onclick="showAdminProfile(\''+p.name.replace(/'/g,"\\'")+'\')">'+(d?'<div class="due-flag"></div>':'')+avatar(dn,38,'margin-bottom:8px')+'<div class="sn">'+dn+'</div><div class="sr">'+(p.role||'JOLT Staff')+'</div>'+(p.enneagram?'<div style="margin-top:6px"><span class="badge br" style="font-size:11px">E'+p.enneagram.n+(p.wing||'')+'</span></div>':'')+(d?'<div style="margin-top:4px"><span class="badge bam" style="font-size:11px">Update due</span></div>':'')+'</div>'}).join('');
  const opts=ps.map(p=>'<option value="'+p.name+'">'+(p.preferred||p.name)+'</option>').join('');
  document.getElementById('c-a').innerHTML='<option value="">Select...</option>'+opts;
  document.getElementById('c-b').innerHTML='<option value="">Select...</option>'+opts;
@@ -782,7 +791,7 @@ function showAdminProfile(name){
  const key=name.replace(/[^a-zA-Z0-9]/g,'_');
  document.getElementById('a-detail').innerHTML=
   '<div class="card card-accent">'+
-  '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem"><span style="font-size:15px;font-weight:700">'+dn+'</span>'+
+  '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:.75rem">'+avatar(dn,42,'margin-bottom:0;flex-shrink:0')+'<span style="font-size:15px;font-weight:700">'+dn+'</span>'+
   (p.pronouns&&p.pronouns!=='not specified'?'<span class="badge bb">'+p.pronouns+'</span>':'')+
   '<span class="badge br">'+(p.enneagram?'E'+p.enneagram.n+(p.wing||''):'TBD')+'</span>'+
   '<span class="badge bg">'+(p.role||'Staff')+'</span>'+
@@ -834,7 +843,7 @@ async function runCompare(){
  const dA=pA.preferred||pA.name,dB=pB.preferred||pB.name;
  try{
   const r=await claude('You are a trauma-informed organizational consultant for JOLT Foundation. Admin-level comparison of two staff members for supervisory use. '+dA+' ('+(pA.pronouns||'?')+'): Enneagram '+(pA.enneagram?pA.enneagram.n+' '+pA.enneagram.name:'?')+'. Communication: '+(pA.comm&&pA.comm.channel||[]).join(', ')+'. Under stress: '+(pA.comm&&pA.comm.stress||[]).join(', ')+'. Feedback: '+(pA.comm&&pA.comm.feedback||[]).join(', ')+'. Strengths: '+(pA.strengths||[]).join(', ')+'. Needs: '+(pA.needs||[]).join(', ')+'. Activating: '+((pA.conflict&&pA.conflict.activating||[]).join(', ')||'none')+'. '+dB+' ('+(pB.pronouns||'?')+'): Enneagram '+(pB.enneagram?pB.enneagram.n+' '+pB.enneagram.name:'?')+'. Communication: '+(pB.comm&&pB.comm.channel||[]).join(', ')+'. Under stress: '+(pB.comm&&pB.comm.stress||[]).join(', ')+'. Feedback: '+(pB.comm&&pB.comm.feedback||[]).join(', ')+'. Strengths: '+(pB.strengths||[]).join(', ')+'. Needs: '+(pB.needs||[]).join(', ')+'. Activating: '+((pB.conflict&&pB.conflict.activating||[]).join(', ')||'none')+'. Write 5 numbered sections: 1. Where they will naturally connect (2-3 sentences) 2. Potential friction points (2-3 sentences) 3. How to communicate with each differently, using correct pronouns (1-2 sentences each) 4. Supervisor facilitation recommendations if they need to work through conflict (3-4 sentences) 5. Training accommodations for each when delivering the same content (1-2 sentences each). Trauma-informed, strengths-based.');
-  document.getElementById('co-out').innerHTML='<div class="cp"><div class="cc"><div class="av" style="margin-bottom:.5rem">'+dA.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div class="sn">'+dA+'</div><div class="sr">'+(pA.role||'JOLT Staff')+'</div>'+(pA.enneagram?'<span class="badge br" style="margin-top:6px;font-size:11px">E'+pA.enneagram.n+(pA.wing||'')+'</span>':'')+'</div><div class="cc"><div class="av" style="margin-bottom:.5rem">'+dB.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()+'</div><div class="sn">'+dB+'</div><div class="sr">'+(pB.role||'JOLT Staff')+'</div>'+(pB.enneagram?'<span class="badge br" style="margin-top:6px;font-size:11px">E'+pB.enneagram.n+(pB.wing||'')+'</span>':'')+'</div></div><div class="card card-accent"><div class="rl"><svg class="icon-sm"><use href="#i-compare"/></svg>Comparison and strategy</div><div class="at">'+r+'</div></div>';
+  document.getElementById('co-out').innerHTML='<div class="cp"><div class="cc">'+avatar(dA,38,'margin-bottom:.5rem')+'<div class="sn">'+dA+'</div><div class="sr">'+(pA.role||'JOLT Staff')+'</div>'+(pA.enneagram?'<span class="badge br" style="margin-top:6px;font-size:11px">E'+pA.enneagram.n+(pA.wing||'')+'</span>':'')+'</div><div class="cc">'+avatar(dB,38,'margin-bottom:.5rem')+'<div class="sn">'+dB+'</div><div class="sr">'+(pB.role||'JOLT Staff')+'</div>'+(pB.enneagram?'<span class="badge br" style="margin-top:6px;font-size:11px">E'+pB.enneagram.n+(pB.wing||'')+'</span>':'')+'</div></div><div class="card card-accent"><div class="rl"><svg class="icon-sm"><use href="#i-compare"/></svg>Comparison and strategy</div><div class="at">'+r+'</div></div>';
  }catch(e){document.getElementById('co-out').innerHTML='<div class="alert ai"><span>Error: '+e.message+'</span></div>'}
 }
 
