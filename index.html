@@ -128,6 +128,15 @@ textarea{min-height:75px;resize:vertical}
 <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
 <symbol id="i-compare" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect x="3" y="7" width="6" height="10" rx="1"/><rect x="15" y="7" width="6" height="10" rx="1"/></symbol>
 <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></symbol>
+<symbol id="i-e1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m14.8 9.2-1.8 4.6-4.6 1.8 1.8-4.6z"/></symbol>
+<symbol id="i-e2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.6 12 20l-7.5-7.4A5 5 0 1 1 12 6.3a5 5 0 1 1 7.5 6.3z"/></symbol>
+<symbol id="i-e3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
+<symbol id="i-e4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.3 6 10.7a6 6 0 1 1-12 0C6 9.3 12 3 12 3z"/></symbol>
+<symbol id="i-e5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-e6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.5 8-10V5l-8-3-8 3v7c0 6.5 8 10 8 10z"/></symbol>
+<symbol id="i-e7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></symbol>
+<symbol id="i-e8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></symbol>
+<symbol id="i-e9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0"/></symbol>
 </svg>
 
 <div class="app">
@@ -215,6 +224,7 @@ textarea{min-height:75px;resize:vertical}
   <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
   <h2>How you communicate</h2>
   <div class="card">
+    <p style="margin-bottom:1rem">You can select up to <strong>two</strong> answers for each question — pick what's most true for you.</p>
     <h3>When you have something important to say, you prefer to:</h3>
     <div class="og" id="q-channel">
       <button class="ob" onclick="so(this)">Say it in person or by phone — I want to talk it through</button>
@@ -243,6 +253,8 @@ textarea{min-height:75px;resize:vertical}
       <button class="ob" onclick="so(this)">In private, never in front of others</button>
       <button class="ob" onclick="so(this)">In writing so I can process at my own pace</button>
     </div>
+    <label for="f-commctx" style="margin-top:1.25rem">Anything else about how you communicate? (Optional)</label>
+    <textarea id="f-commctx" placeholder="Add any context that would help your team understand your communication style..."></textarea>
   </div>
   <div class="btn-row">
     <button class="btn" onclick="go('s-enn')">Back</button>
@@ -256,6 +268,7 @@ textarea{min-height:75px;resize:vertical}
   <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
   <h2>How you learn best</h2>
   <div class="card">
+    <p style="margin-bottom:1rem">Select up to <strong>two</strong> answers for each question.</p>
     <h3>You remember new information best when you:</h3>
     <div class="og" id="q-input">
       <button class="ob" onclick="so(this)">Hear it explained out loud</button>
@@ -284,6 +297,8 @@ textarea{min-height:75px;resize:vertical}
       <button class="ob" onclick="so(this)">Sit with it and come back later</button>
       <button class="ob" onclick="so(this)">Shut down and need support to re-engage</button>
     </div>
+    <label for="f-learnctx" style="margin-top:1.25rem">Anything else about how you learn? (Optional)</label>
+    <textarea id="f-learnctx" placeholder="Add any context about learning environments, accommodations, or what helps things stick..."></textarea>
   </div>
   <div class="btn-row">
     <button class="btn" onclick="go('s-comm')">Back</button>
@@ -297,7 +312,7 @@ textarea{min-height:75px;resize:vertical}
   <div class="progress-bar"><div class="progress-fill" style="width:83%"></div></div>
   <h2>Conflict and hard conversations</h2>
   <div class="card">
-    <p style="margin-bottom:1rem">These questions help us support you when things get hard. There are no wrong answers, and you only share what you're comfortable sharing.</p>
+    <p style="margin-bottom:1rem">These questions help us support you when things get hard. There are no wrong answers, and you only share what you're comfortable sharing. Select up to <strong>two</strong> answers per question.</p>
     <h3>When there's conflict with a coworker, your first instinct is to:</h3>
     <div class="og" id="q-instinct">
       <button class="ob" onclick="so(this)">Address it directly, as soon as possible</button>
@@ -569,14 +584,14 @@ function findProfile(name){const ps=loadProfiles();const k=Object.keys(ps).find(
 function clean(t){return (t||'').replace(/^#{1,6}\s*/gm,'').replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').trim()}
 
 function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='s-admin')refreshAdmin();window.scrollTo(0,0)}
-function so(btn){btn.parentNode.querySelectorAll('.ob').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel')}
+function so(btn){if(btn.classList.contains('sel')){btn.classList.remove('sel')}else if(btn.parentNode.querySelectorAll('.ob.sel').length<2){btn.classList.add('sel')}}
 function sm(btn,max){const sel=btn.parentNode.querySelectorAll('.ob.sel');if(btn.classList.contains('sel')){btn.classList.remove('sel')}else if(sel.length<max){btn.classList.add('sel')}}
 function getSel(id){return Array.from(document.querySelectorAll('#'+id+' .ob.sel')).map(b=>b.textContent.trim())}
 
 function initEnn(){
  const g=document.getElementById('eg');g.innerHTML='';
  ENN.forEach(e=>{const b=document.createElement('button');b.className='eb';
-  b.innerHTML='<span class="en">'+e.n+'</span>'+e.name;
+  b.innerHTML='<svg class="icon" style="width:21px;height:21px;display:block;margin:0 auto 5px;color:var(--dark-red)"><use href="#i-e'+e.n+'"/></svg><span class="en">'+e.n+'</span>'+e.name;
   b.onclick=()=>{document.querySelectorAll('.eb').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');selEnn=e};
   g.appendChild(b)});
 }
@@ -601,8 +616,8 @@ async function submitAssessment(){
  const email=document.getElementById('f-email').value.trim();
  const wing=document.getElementById('f-wing').value;
  const data={name,preferred,pronouns,role,email,enneagram:selEnn,wing,timestamp:new Date().toISOString(),
-  comm:{channel:getSel('q-channel'),stress:getSel('q-stress'),respect:getSel('q-respect'),feedback:getSel('q-feedback')},
-  learning:{input:getSel('q-input'),engage:getSel('q-engage'),retain:getSel('q-retain'),stuck:getSel('q-stuck')},
+  comm:{channel:getSel('q-channel'),stress:getSel('q-stress'),respect:getSel('q-respect'),feedback:getSel('q-feedback'),context:document.getElementById('f-commctx').value.trim()},
+  learning:{input:getSel('q-input'),engage:getSel('q-engage'),retain:getSel('q-retain'),stuck:getSel('q-stuck'),context:document.getElementById('f-learnctx').value.trim()},
   conflict:{instinct:getSel('q-instinct'),safety:getSel('q-safety'),after:getSel('q-after'),activating:getSel('q-activating'),context:document.getElementById('f-confctx').value.trim()},
   strengths:getSel('q-strengths'),needs:getSel('q-needs'),extra:document.getElementById('f-extra').value.trim(),notes:[]};
 
@@ -614,8 +629,8 @@ async function submitAssessment(){
  try{
   document.getElementById('gen-msg').textContent='Generating your communication profile...';
   const[ct,lt,rt]=await Promise.all([
-   claude('You are a trauma-informed organizational consultant for JOLT Foundation in Peoria, IL. Write a warm, direct 3-4 sentence communication style profile for '+dn+' ('+role+'), pronouns '+pronouns+'. Second-person. '+el+'. Preferred channel: '+data.comm.channel.join(', ')+'. Under stress: '+data.comm.stress.join(', ')+'. Feels respected when: '+data.comm.respect.join(', ')+'. Feedback preference: '+data.comm.feedback.join(', ')+'. '+an+' Strengths-based, no headers, just prose.'),
-   claude('You are a trauma-informed learning consultant for JOLT Foundation. Write a warm, direct 3-4 sentence learning style profile for '+dn+' ('+role+'), pronouns '+pronouns+'. Second-person. '+el+'. Retains info by: '+data.learning.input.join(', ')+'. Engaged when: '+data.learning.engage.join(', ')+'. Retains material when: '+data.learning.retain.join(', ')+'. When stuck: '+data.learning.stuck.join(', ')+'. Practical, no headers, just prose.'),
+   claude('You are a trauma-informed organizational consultant for JOLT Foundation in Peoria, IL. Write a warm, direct 3-4 sentence communication style profile for '+dn+' ('+role+'), pronouns '+pronouns+'. Second-person. '+el+'. Preferred channel: '+data.comm.channel.join(', ')+'. Under stress: '+data.comm.stress.join(', ')+'. Feels respected when: '+data.comm.respect.join(', ')+'. Feedback preference: '+data.comm.feedback.join(', ')+'. '+an+' Additional context they shared: '+(data.comm.context||'none')+'. Strengths-based, no headers, just prose.'),
+   claude('You are a trauma-informed learning consultant for JOLT Foundation. Write a warm, direct 3-4 sentence learning style profile for '+dn+' ('+role+'), pronouns '+pronouns+'. Second-person. '+el+'. Retains info by: '+data.learning.input.join(', ')+'. Engaged when: '+data.learning.engage.join(', ')+'. Retains material when: '+data.learning.retain.join(', ')+'. When stuck: '+data.learning.stuck.join(', ')+'. Additional context they shared: '+(data.learning.context||'none')+'. Practical, no headers, just prose.'),
    claude('You are a trauma-informed organizational consultant for JOLT Foundation. Write exactly 5 numbered recommendations for supervisors and teammates working with '+dn+' ('+role+'), pronouns '+pronouns+'. '+el+'. Strengths: '+data.strengths.join(', ')+'. Needs from supervisors: '+data.needs.join(', ')+'. Conflict instinct: '+data.conflict.instinct.join(', ')+'. Feels safe when: '+data.conflict.safety.join(', ')+'. After hard conversations needs: '+data.conflict.after.join(', ')+'. '+an+' Extra context: '+(data.conflict.context||'none')+'. Each recommendation 1-2 sentences, plain numbered list, no title or heading.')
   ]);
   data.ai_comm=ct;data.ai_learn=lt;data.ai_rec=rt;
@@ -627,7 +642,7 @@ async function submitAssessment(){
 
   document.getElementById('r-name').textContent=dn;
   document.getElementById('r-date').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  document.getElementById('r-enn').innerHTML=selEnn?('Enneagram '+selEnn.n+wing):'Enneagram TBD';
+  document.getElementById('r-enn').innerHTML=selEnn?('<svg class="icon-sm"><use href="#i-e'+selEnn.n+'"/></svg>Enneagram '+selEnn.n+wing):'Enneagram TBD';
   const pb=document.getElementById('r-pron');
   if(pronouns!=='not specified'){pb.textContent=pronouns;pb.style.display=''}else{pb.style.display='none'}
   document.getElementById('r-role').textContent=role||'JOLT Staff';
@@ -684,7 +699,7 @@ function lookupProfile(){
  document.getElementById('lookup-out').innerHTML=
   '<div class="card card-accent">'+
   '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem">'+
-  '<span class="badge br">'+(p.enneagram?'Enneagram '+p.enneagram.n+(p.wing||''):'Enneagram TBD')+'</span>'+
+  '<span class="badge br">'+(p.enneagram?'<svg class="icon-sm"><use href="#i-e'+p.enneagram.n+'"/></svg>Enneagram '+p.enneagram.n+(p.wing||''):'Enneagram TBD')+'</span>'+
   (p.pronouns&&p.pronouns!=='not specified'?'<span class="badge bb">'+p.pronouns+'</span>':'')+
   '<span class="badge bg">'+(p.role||'JOLT Staff')+'</span>'+
   '<span class="badge bg">'+new Date(p.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</span></div>'+
